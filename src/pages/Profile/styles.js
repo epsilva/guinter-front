@@ -1,0 +1,71 @@
+import styled from 'styled-components';
+import { darken } from 'polished';
+
+export const Container = styled.div`
+    max-width: 600px;
+    margin: 0 auto;
+    padding-left: ${props => (props.isOpen ? '180px' : '20px')};
+    transition: padding-left 0.6s;
+    padding-bottom: 20px;
+
+    form {
+        display: flex;
+        flex-direction: column;
+
+        input {
+            background: rgba(5, 5, 5, 0.1);
+            border: 0;
+            border-radius: 4px;
+            height: 44px;
+            padding: 0 15px;
+            margin: 0 0 10px;
+        }
+
+        span {
+            color: #fb6f91;
+            align-self: flex-start;
+            margin: 0 0 10px;
+            font-weight: bold;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 10px 0 20px;
+        }
+
+        button {
+            margin: 5px 0 0;
+            height: 44px;
+            background: #3b9eff;
+            font-weight: bold;
+            color: #fff;
+            border: 0;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: background 0.2s;
+
+            &:hover {
+                background: ${darken(0.03, '#3b9eff')};
+            }
+        }
+    }
+
+    > button {
+        width: 100%;
+        margin: 10px 0 0;
+        height: 44px;
+        background: #f64c75;
+        font-weight: bold;
+        color: #fff;
+        border: 0;
+        border-radius: 4px;
+        font-size: 16px;
+        transition: background 0.2s;
+
+        &:hover {
+            background: ${darken(0.08, '#F64C75')};
+        }
+    }
+`;
