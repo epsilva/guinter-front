@@ -5,6 +5,9 @@ export const Container = styled.div`
     position: fixed;
     margin: 1em;
     right: 0px;
+    display: none;
+
+    -webkit-user-drag: element;
 
     button {
         box-shadow: 0px 5px 11px -2px rgba(0, 0, 0, 0.18),

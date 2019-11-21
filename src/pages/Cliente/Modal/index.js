@@ -16,10 +16,14 @@ import {
     ContainerEnd,
     ContainerTable,
     ContainerButton,
+    ContainerDadosPessoais,
 } from './styles';
+
+import ModalContato from '~/pages/Cliente/Modal/Contato';
 
 export default function Modal({ parent }) {
     const [isOpenModal, setIsOpenModal] = useState(false);
+    const [openModalContato, setOpenModalContato] = useState(false);
 
     useEffect(() => {
         const [openModal] = parent;
@@ -31,9 +35,16 @@ export default function Modal({ parent }) {
         setOpenModal(false);
     }
 
+    function handleOpenModalContato() {
+        setOpenModalContato(!openModalContato);
+    }
+
     return (
         <ModalPopup isOpen={isOpenModal}>
-            <Container>
+            <Container isOpen={isOpenModal}>
+                <ModalContato
+                    parent={[openModalContato, setOpenModalContato]}
+                />
                 <header>
                     <strong>Cliente</strong>
                     <button type="button" onClick={handleCloseModal}>
@@ -42,12 +53,19 @@ export default function Modal({ parent }) {
                 </header>
 
                 <Form>
-                    <Input
-                        type="text"
-                        name="name"
-                        placeholder="Nome do cliente"
-                    />
-                    <Input type="text" name="cpfCnpj" placeholder="CPJ/CNPJ" />
+                    <span>Dados Pessoais</span>
+                    <ContainerDadosPessoais>
+                        <Input
+                            type="text"
+                            name="name"
+                            placeholder="Nome do cliente"
+                        />
+                        <Input
+                            type="text"
+                            name="cpfCnpj"
+                            placeholder="CPJ/CNPJ"
+                        />
+                    </ContainerDadosPessoais>
                     <span>Endereço</span>
                     <ContainerEnd>
                         <Input type="text" name="bairro" placeholder="Bairro" />
@@ -68,8 +86,12 @@ export default function Modal({ parent }) {
                                 <tr>
                                     <th>Nome</th>
                                     <th>Contato</th>
+                                    <th>E-mail</th>
                                     <th>
-                                        <button type="button">
+                                        <button
+                                            type="button"
+                                            onClick={handleOpenModalContato}
+                                        >
                                             <MdAdd size={20} color="#fff" />
                                         </button>
                                     </th>
@@ -79,6 +101,7 @@ export default function Modal({ parent }) {
                                 <tr>
                                     <td>Guiknter</td>
                                     <td>(51) 99999-9999</td>
+                                    <td>guinter@guinter.com</td>
                                     <th>
                                         <button type="button">
                                             <MdEdit size={20} />
@@ -94,6 +117,7 @@ export default function Modal({ parent }) {
                                 <tr>
                                     <td>Esdras</td>
                                     <td>(61) 98888-8888</td>
+                                    <td>esdras@esdras.com</td>
                                     <th>
                                         <button type="button">
                                             <MdEdit size={20} />
@@ -113,7 +137,7 @@ export default function Modal({ parent }) {
                         <button type="button">
                             <MdSave size={42} color="#3b9eff" />
                         </button>
-                        <button type="button">
+                        <button type="button" onClick={handleCloseModal}>
                             <MdCancel size={42} color="#fb6f91" />
                         </button>
                     </ContainerButton>

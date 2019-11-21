@@ -19,7 +19,7 @@ export default function Cliente() {
 
     return (
         <Container>
-            <Modal openModal={openModal} parent={[openModal, setOpenModal]} />
+            <Modal parent={[openModal, setOpenModal]} />
             <SearchBar>
                 <i>
                     <MdSearch size={36} />

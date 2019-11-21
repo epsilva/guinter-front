@@ -1,12 +1,37 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const fadeIn = keyframes`
+  from {
+    transform: translateY(-100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(200%);
+  }
+`;
 
 export const Container = styled.div`
     background: #fff;
     width: 800px;
-    height: 600px;
+    height: 560px;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.7);
     display: flex;
     flex-direction: column;
+
+    visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
+    animation: ${props => (props.isOpen ? fadeIn : fadeOut)} 0.6s forwards;
+    transition: visibility 0.2s;
+
     header {
         box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.7);
         height: 50px;
@@ -53,7 +78,7 @@ export const Container = styled.div`
             border: 0;
             height: 1px;
             background: rgba(255, 255, 255, 0.2);
-            margin: 10px 0 20px;
+            margin: 0 0 20px;
             text-shadow: 1px 1px #fff, -1px -1px #fff;
             color: #999;
         }
@@ -67,7 +92,14 @@ export const ContainerEnd = styled.div`
 `;
 
 export const ModalPopup = styled.div`
-    display: ${props => (props.isOpen ? 'flex' : 'none')};
+    display: flex;
+    visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
+
+    &:hidden {
+        visibility: hidden;
+        transition-delay: 0, 0.6s;
+    }
+
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     left: 0;
@@ -126,7 +158,11 @@ export const ContainerTable = styled.div`
                 text-align: left;
                 padding: 8px;
 
-                :nth-child(even) {
+                :nth-child(2) {
+                    text-align: center;
+                }
+
+                :nth-child(3) {
                     text-align: center;
                 }
             }
@@ -215,6 +251,7 @@ export const ContainerButton = styled.div`
         justify-content: center;
         align-items: center;
         border: none;
+        background: none;
 
         transition: transform 0.2s;
 
@@ -222,4 +259,12 @@ export const ContainerButton = styled.div`
             transform: scale(1.1);
         }
     }
+`;
+
+export const ContainerDadosPessoais = styled.div`
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
 `;
