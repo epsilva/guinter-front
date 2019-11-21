@@ -32,6 +32,7 @@ export default function Menu() {
         <Container>
             {listMenu.map(menu => (
                 <CustomLink
+                    key={menu.id}
                     to={menu.path}
                     activeOnlyWhenExact={menu.id === 2}
                     label={menu.title}

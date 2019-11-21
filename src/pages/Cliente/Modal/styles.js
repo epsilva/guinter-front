@@ -1,56 +1,92 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    display: flex;
-    padding: 5px 5px 5px 5px;
-    margin: 70px 10px 10px 10px;
-    width: 100%;
-    flex-direction: column;
-    overflow: hidden;
-
-    /* background: #444; */
-`;
-
-export const SearchBar = styled.div`
     background: #fff;
+    width: 800px;
+    height: 600px;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.7);
-    width: 100%;
-    height: 50px;
-    position: sticky;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-left: 20px;
-
-    i {
-        position: absolute;
-    }
-
-    button {
-        border: none;
-        margin-right: 20px;
-        margin-left: 20px;
-        border-radius: 50%;
-        width: 50px;
+    flex-direction: column;
+    header {
+        box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.7);
         height: 50px;
         display: flex;
-        background: #fff;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
+        padding: 10px 10px 10px 10px;
+
+        strong {
+            font-size: 35px;
+            color: #999;
+        }
+
+        button {
+            background: none;
+            border: none;
+            transition: transform 0.2s;
+
+            :hover {
+                transform: scale(1.1);
+            }
+        }
     }
 
-    input {
-        padding: 0 50px;
-        width: 100%;
-        font-size: 18px;
+    form {
+        padding-top: 20px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+
+        input {
+            background: #eee;
+            width: 45%;
+            text-align: left;
+            background: rgba(5, 5, 5, 0.1);
+            border: 0;
+            height: 30px;
+            padding: 0 15px;
+            margin: 0 20px 10px;
+        }
+
+        span {
+            border: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 10px 0 20px;
+            text-shadow: 1px 1px #fff, -1px -1px #fff;
+            color: #999;
+        }
     }
+`;
+
+export const ContainerEnd = styled.div`
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap-reverse;
+`;
+
+export const ModalPopup = styled.div`
+    display: ${props => (props.isOpen ? 'flex' : 'none')};
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    align-items: center;
+    justify-content: center;
 `;
 
 export const ContainerTable = styled.div`
     overflow: auto;
-    margin-top: 10px;
+    margin-top: 2px;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.7);
-    height: 100%;
+    height: 200px;
+    width: 780px;
     background: #fff;
     table {
         padding: 0 0 0 0;
@@ -63,7 +99,23 @@ export const ContainerTable = styled.div`
             tr {
                 th {
                     color: #fff;
-                    padding: 8px;
+
+                    &:nth-last-child(1) {
+                        display: flex;
+                        justify-content: flex-end;
+                        padding-right: 5px;
+
+                        button {
+                            border: none;
+                            background: none;
+
+                            transition: transform 0.2s;
+
+                            :hover {
+                                transform: scale(1.1);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -146,6 +198,28 @@ export const ContainerTable = styled.div`
                     }
                 }
             }
+        }
+    }
+`;
+
+export const ContainerButton = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 70px;
+    padding-right: 10px;
+
+    button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+
+        transition: transform 0.2s;
+
+        :hover {
+            transform: scale(1.1);
         }
     }
 `;

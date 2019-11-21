@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     MdPersonAdd,
     MdSearch,
@@ -6,22 +6,26 @@ import {
     MdDelete,
     MdVisibility,
 } from 'react-icons/md';
+import Modal from '~/pages/Cliente/Modal';
 
 import { Container, SearchBar, ContainerTable } from './styles';
 
 export default function Cliente() {
+    const [openModal, setOpenModal] = useState(false);
+
+    function handleOpenModal() {
+        setOpenModal(!openModal);
+    }
+
     return (
         <Container>
+            <Modal openModal={openModal} parent={[openModal, setOpenModal]} />
             <SearchBar>
                 <i>
                     <MdSearch size={36} />
                 </i>
-                <input
-                    type="text"
-                    placeholder="Pesquisar cliente"
-                    onChange=""
-                />
-                <button type="button" disabled="disabled" onClick="">
+                <input type="text" placeholder="Pesquisar cliente" />
+                <button type="button" onClick={handleOpenModal}>
                     <MdPersonAdd size={36} color="#3b9eff" />
                 </button>
             </SearchBar>
@@ -38,7 +42,7 @@ export default function Cliente() {
                         <tr>
                             <td>Guiknter</td>
                             <td>(51) 99999-9999</td>
-                            <div>
+                            <th>
                                 <button type="button">
                                     <MdEdit size={20} />
                                 </button>
@@ -48,12 +52,12 @@ export default function Cliente() {
                                 <button type="button">
                                     <MdDelete size={20} />
                                 </button>
-                            </div>
+                            </th>
                         </tr>
                         <tr>
                             <td>Esdras</td>
                             <td>(61) 98888-8888</td>
-                            <div>
+                            <th>
                                 <button type="button">
                                     <MdEdit size={20} />
                                 </button>
@@ -63,7 +67,7 @@ export default function Cliente() {
                                 <button type="button">
                                     <MdDelete size={20} />
                                 </button>
-                            </div>
+                            </th>
                         </tr>
                     </tbody>
                 </table>
