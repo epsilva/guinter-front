@@ -84,7 +84,7 @@ export default function Cliente() {
                             <th />
                         </tr>
                     </thead>
-                    <tbody>
+                    {/* <tbody>
                         {loading ||
                             clientes.map(cliente => (
                                 <tr>
@@ -135,7 +135,7 @@ export default function Cliente() {
                                     </th>
                                 </tr>
                             ))}
-                    </tbody>
+                    </tbody> */}
                 </table>
                 {loading && <Loading />}
                 {error && <Error />}
