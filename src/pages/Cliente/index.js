@@ -84,7 +84,7 @@ export default function Cliente() {
                         </tr>
                     </thead>
                     <tbody>
-                        {clientes &&
+                        {loading ||
                             clientes.map(cliente => (
                                 <tr>
                                     <td>{cliente.nome}</td>
