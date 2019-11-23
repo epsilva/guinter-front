@@ -23,6 +23,7 @@ export default function Cliente() {
     const [error, setError] = useState(false);
 
     useEffect(() => {
+        setClientes([]);
         async function loadClientes() {
             setLoading(true);
             try {
@@ -35,7 +36,7 @@ export default function Cliente() {
             }
         }
 
-        loadClientes();
+        // loadClientes();
     }, []);
 
     function handleOpenModal() {
