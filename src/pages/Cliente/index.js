@@ -84,51 +84,56 @@ export default function Cliente() {
                         </tr>
                     </thead>
                     <tbody>
-                        {clientes.map(cliente => (
-                            <tr>
-                                <td>{cliente.nome}</td>
-                                <td>
-                                    {cliente.contatos.length > 0
-                                        ? cliente.contatos.map(
-                                              contato =>
-                                                  contato.principal &&
-                                                  maskTelefone(contato.telefone)
-                                          )
-                                        : '-'}
-                                </td>
-                                <td>
-                                    {cliente.contatos.length > 0
-                                        ? cliente.contatos.map(
-                                              contato =>
-                                                  contato.principal &&
-                                                  contato.email
-                                          )
-                                        : '-'}
-                                </td>
-                                <td>{maskCpfCnpj(cliente.cpfcnpj)}</td>
-                                <th>
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            handleOpenEditModal(cliente)
-                                        }
-                                    >
-                                        <MdEdit size={20} />
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            handleOpenVisualizarModal(cliente)
-                                        }
-                                    >
-                                        <MdVisibility size={20} />
-                                    </button>
-                                    <button type="button">
-                                        <MdDelete size={20} />
-                                    </button>
-                                </th>
-                            </tr>
-                        ))}
+                        {clientes &&
+                            clientes.map(cliente => (
+                                <tr>
+                                    <td>{cliente.nome}</td>
+                                    <td>
+                                        {cliente.contatos.length > 0
+                                            ? cliente.contatos.map(
+                                                  contato =>
+                                                      contato.principal &&
+                                                      maskTelefone(
+                                                          contato.telefone
+                                                      )
+                                              )
+                                            : '-'}
+                                    </td>
+                                    <td>
+                                        {cliente.contatos.length > 0
+                                            ? cliente.contatos.map(
+                                                  contato =>
+                                                      contato.principal &&
+                                                      contato.email
+                                              )
+                                            : '-'}
+                                    </td>
+                                    <td>{maskCpfCnpj(cliente.cpfcnpj)}</td>
+                                    <th>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                handleOpenEditModal(cliente)
+                                            }
+                                        >
+                                            <MdEdit size={20} />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                handleOpenVisualizarModal(
+                                                    cliente
+                                                )
+                                            }
+                                        >
+                                            <MdVisibility size={20} />
+                                        </button>
+                                        <button type="button">
+                                            <MdDelete size={20} />
+                                        </button>
+                                    </th>
+                                </tr>
+                            ))}
                     </tbody>
                 </table>
                 {loading && <Loading />}
