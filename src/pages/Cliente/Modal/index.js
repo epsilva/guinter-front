@@ -9,7 +9,9 @@ import {
     MdVisibility,
 } from 'react-icons/md';
 import { Form, Input } from '@rocketseat/unform';
-
+import * as Yup from 'yup';
+import { useSelector, useDispatch } from 'react-redux';
+import { maskCpfCnpj, maskTelefone } from '~/components/Masks';
 import {
     Container,
     ModalPopup,
@@ -21,9 +23,61 @@ import {
 
 import ModalContato from '~/pages/Cliente/Modal/Contato';
 
-export default function Modal({ parent }) {
+const schema = Yup.object().shape({
+    nome: Yup.string().required('O Nome é obrigatório'),
+    cpfcnpj: Yup.string().required('O CPF/CNPJ é obrigatório'),
+    estado: Yup.string().required('O Estado é obrigatório'),
+    cidade: Yup.string().required('A Cidade é obrigatória'),
+    bairro: Yup.string().required('O Bairro é obrigatório'),
+    rua: Yup.string().required('A rua é obrigatório'),
+    numero: Yup.string().required('O Número é obrigatório'),
+    complemento: Yup.string(),
+});
+
+export default function Modal({ parent, cliente, isVsible }) {
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [openModalContato, setOpenModalContato] = useState(false);
+    const [selectedCliente, setSelectedCliente] = useState({});
+    const [dadosCliente, setDadosCliente] = useState({});
+    const [selectedContato, setSelectedContato] = useState({});
+    const [visible, setVisible] = useState(false);
+
+    const contatosAdd = useSelector(state => state.contato.data);
+
+    const [contatos, setContatos] = useState([]);
+    const [visivel, setVisivel] = useState(true);
+
+    useEffect(() => {
+        if (Object.keys(contatosAdd).length !== 0) {
+            contatos.push(contatosAdd);
+            setContatos(contatos);
+        }
+    }, [contatos, contatosAdd]);
+
+    useEffect(() => {
+        setVisivel(isVsible);
+    }, [isVsible]);
+
+    useEffect(() => {
+        setSelectedCliente(cliente);
+        setDadosCliente({});
+        if (cliente && cliente.enderecos) {
+            setDadosCliente({
+                nome: cliente.nome,
+                cpfcnpj: cliente.cpfcnpj,
+                estado: cliente.enderecos.estado,
+                cidade: cliente.enderecos.cidade,
+                bairro: cliente.enderecos.bairro,
+                rua: cliente.enderecos.rua,
+                numero: cliente.enderecos.numero,
+                complemento: cliente.enderecos.complemento,
+            });
+            setContatos(cliente.contatos);
+        } else {
+            setDadosCliente({});
+            setContatos([]);
+        }
+    }, [cliente]);
 
     useEffect(() => {
         const [openModal] = parent;
@@ -37,6 +91,42 @@ export default function Modal({ parent }) {
 
     function handleOpenModalContato() {
         setOpenModalContato(!openModalContato);
+        setSelectedContato({});
+        setVisible(false);
+    }
+
+    function handlechangeCpfCnpj(e) {
+        e.target.value = maskCpfCnpj(e.target.value);
+    }
+
+    function handleOnSubmit(data) {
+        const dadosCliente = {
+            nome: data.nome,
+            cpfcnpj: data.cpfcnpj.replace(/[^0-9]+/g, ''),
+            enderecos: {
+                numero: data.numero,
+                rua: data.rua,
+                bairro: data.bairro,
+                cidade: data.cidade,
+                estado: data.estado,
+                complemento: data.complemento,
+            },
+            contaos: contatos,
+        };
+
+        console.tron.log(dadosCliente);
+    }
+
+    function handleOpenEditModal(contato) {
+        setSelectedContato(contato);
+        setVisible(false);
+        setOpenModalContato(!openModalContato);
+    }
+
+    function handleOpenVisualizarModal(contato) {
+        setSelectedContato(contato);
+        setVisible(true);
+        setOpenModalContato(!openModalContato);
     }
 
     return (
@@ -44,6 +134,8 @@ export default function Modal({ parent }) {
             <Container isOpen={isOpenModal}>
                 <ModalContato
                     parent={[openModalContato, setOpenModalContato]}
+                    contato={selectedContato}
+                    isVsible={visible}
                 />
                 <header>
                     <strong>Cliente</strong>
@@ -52,34 +144,83 @@ export default function Modal({ parent }) {
                     </button>
                 </header>
 
-                <Form>
-                    <span>Dados Pessoais</span>
+                <Form
+                    schema={schema}
+                    initialData={dadosCliente}
+                    onSubmit={handleOnSubmit}
+                >
+                    <h4>Dados Pessoais</h4>
                     <ContainerDadosPessoais>
-                        <Input
-                            type="text"
-                            name="name"
-                            placeholder="Nome do cliente"
-                        />
-                        <Input
-                            type="text"
-                            name="cpfCnpj"
-                            placeholder="CPJ/CNPJ"
-                        />
+                        <div>
+                            <Input
+                                type="text"
+                                name="nome"
+                                placeholder="Nome do cliente"
+                                disabled={isVsible}
+                            />
+                        </div>
+                        <div>
+                            <Input
+                                type="text"
+                                name="cpfcnpj"
+                                placeholder="CPJ/CNPJ"
+                                disabled={isVsible}
+                                onChange={handlechangeCpfCnpj}
+                            />
+                        </div>
                     </ContainerDadosPessoais>
-                    <span>Endereço</span>
+                    <h4>Endereço</h4>
                     <ContainerEnd>
-                        <Input type="text" name="bairro" placeholder="Bairro" />
-                        <Input type="text" name="rua" placeholder="Rua" />
-                        <Input type="text" name="cidade" placeholder="Cidade" />
-                        <Input type="text" name="numero" placeholder="Número" />
-                        <Input type="text" name="estado" placeholder="Estado" />
-                        <Input
-                            type="text"
-                            name="complemento"
-                            placeholder="Complemento"
-                        />
+                        <div>
+                            <Input
+                                type="text"
+                                name="estado"
+                                placeholder="Estado"
+                                disabled={isVsible}
+                            />
+                        </div>
+                        <div>
+                            <Input
+                                type="text"
+                                name="cidade"
+                                placeholder="Cidade"
+                                disabled={isVsible}
+                            />
+                        </div>
+                        <div>
+                            <Input
+                                type="text"
+                                name="bairro"
+                                placeholder="Bairro"
+                                disabled={isVsible}
+                            />
+                        </div>
+                        <div>
+                            <Input
+                                type="text"
+                                name="rua"
+                                placeholder="Rua"
+                                disabled={isVsible}
+                            />
+                        </div>
+                        <div>
+                            <Input
+                                type="text"
+                                name="numero"
+                                placeholder="Número"
+                                disabled={isVsible}
+                            />
+                        </div>
+                        <div>
+                            <Input
+                                type="text"
+                                name="complemento"
+                                placeholder="Complemento"
+                                disabled={isVsible}
+                            />
+                        </div>
                     </ContainerEnd>
-                    <span>Contatos</span>
+                    <h4>Contatos</h4>
                     <ContainerTable>
                         <table>
                             <thead>
@@ -91,6 +232,7 @@ export default function Modal({ parent }) {
                                         <button
                                             type="button"
                                             onClick={handleOpenModalContato}
+                                            hidden={isVsible}
                                         >
                                             <MdAdd size={20} color="#fff" />
                                         </button>
@@ -98,45 +240,57 @@ export default function Modal({ parent }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Guiknter</td>
-                                    <td>(51) 99999-9999</td>
-                                    <td>guinter@guinter.com</td>
-                                    <th>
-                                        <button type="button">
-                                            <MdEdit size={20} />
-                                        </button>
-                                        <button type="button">
-                                            <MdVisibility size={20} />
-                                        </button>
-                                        <button type="button">
-                                            <MdDelete size={20} />
-                                        </button>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <td>Esdras</td>
-                                    <td>(61) 98888-8888</td>
-                                    <td>esdras@esdras.com</td>
-                                    <th>
-                                        <button type="button">
-                                            <MdEdit size={20} />
-                                        </button>
-                                        <button type="button">
-                                            <MdVisibility size={20} />
-                                        </button>
-                                        <button type="button">
-                                            <MdDelete size={20} />
-                                        </button>
-                                    </th>
-                                </tr>
+                                {contatos ? (
+                                    contatos.map(contato => (
+                                        <tr>
+                                            <td>{contato.nome}</td>
+                                            <td>
+                                                {maskTelefone(contato.telefone)}
+                                            </td>
+                                            <td>{contato.email}</td>
+                                            <th>
+                                                <button
+                                                    type="button"
+                                                    hidden={isVsible}
+                                                    onClick={() =>
+                                                        handleOpenEditModal(
+                                                            contato
+                                                        )
+                                                    }
+                                                >
+                                                    <MdEdit size={20} />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        handleOpenVisualizarModal(
+                                                            contato
+                                                        )
+                                                    }
+                                                >
+                                                    <MdVisibility size={20} />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    hidden={isVsible}
+                                                >
+                                                    <MdDelete size={20} />
+                                                </button>
+                                            </th>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr />
+                                )}
                             </tbody>
                         </table>
                     </ContainerTable>
                     <ContainerButton>
-                        <button type="button">
-                            <MdSave size={42} color="#3b9eff" />
-                        </button>
+                        {visivel || (
+                            <button type="submit">
+                                <MdSave size={42} color="#3b9eff" />
+                            </button>
+                        )}
                         <button type="button" onClick={handleCloseModal}>
                             <MdCancel size={42} color="#fb6f91" />
                         </button>

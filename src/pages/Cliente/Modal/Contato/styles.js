@@ -22,8 +22,8 @@ const fadeOut = keyframes`
 
 export const Container = styled.div`
     display: flex;
-    width: 800px;
-    height: 215px;
+    width: 90%;
+    height: auto;
     background: #fff;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.7);
     flex-direction: column;
@@ -63,34 +63,24 @@ export const Container = styled.div`
         flex-direction: column;
         align-items: center;
 
-        > input {
-            background: #eee;
-            width: 45%;
-            text-align: left;
-            background: rgba(5, 5, 5, 0.1);
-            border: 0;
-            height: 30px;
-            padding: 0 15px;
-            margin: 0 20px 10px;
+        span {
+            color: #fb6f91;
+            font-weight: bold;
+            align-self: center;
         }
 
-        check {
+        div.check {
             display: flex;
             width: 40%;
-            margin-left: 0%;
+            margin-left: 2%;
             align-items: center;
 
             > input {
                 width: 5%;
                 margin-right: 5px;
-
-            }
-
-            label {
-                padding-bottom: 9px;
             }
         }
-
+    }
 `;
 
 export const Modal = styled.div`
@@ -119,6 +109,25 @@ export const ContainerContatos = styled.div`
     display: flex;
     width: 100%;
     flex-wrap: wrap;
+
+    div.field {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        width: 50%;
+
+        input {
+            background: #eee;
+            width: 90%;
+            text-align: left;
+            background: rgba(5, 5, 5, 0.1);
+            border: 0;
+            height: 30px;
+            padding: 0 15px;
+            margin: 0 20px 10px;
+        }
+    }
 `;
 
 export const ContainerButton = styled.div`

@@ -22,8 +22,8 @@ const fadeOut = keyframes`
 
 export const Container = styled.div`
     background: #fff;
-    width: 800px;
-    height: 560px;
+    width: 65%;
+    height: auto;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.7);
     display: flex;
     flex-direction: column;
@@ -63,18 +63,13 @@ export const Container = styled.div`
         flex-direction: column;
         align-items: center;
 
-        input {
-            background: #eee;
-            width: 45%;
-            text-align: left;
-            background: rgba(5, 5, 5, 0.1);
-            border: 0;
-            height: 30px;
-            padding: 0 15px;
-            margin: 0 20px 10px;
+        span {
+            color: #fb6f91;
+            font-weight: bold;
+            align-self: center;
         }
 
-        span {
+        h4 {
             border: 0;
             height: 1px;
             background: rgba(255, 255, 255, 0.2);
@@ -88,7 +83,25 @@ export const Container = styled.div`
 export const ContainerEnd = styled.div`
     display: flex;
     width: 100%;
-    flex-wrap: wrap-reverse;
+    flex-wrap: wrap;
+    flex-direction: row;
+
+    > div {
+        display: flex;
+        width: 50%;
+        flex-wrap: wrap;
+        flex-direction: column;
+        input {
+            background: #eee;
+            width: 90%;
+            text-align: left;
+            background: rgba(5, 5, 5, 0.1);
+            border: 0;
+            height: 30px;
+            padding: 0 15px;
+            margin: 0 20px 10px;
+        }
+    }
 `;
 
 export const ModalPopup = styled.div`
@@ -118,7 +131,7 @@ export const ContainerTable = styled.div`
     margin-top: 2px;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.7);
     height: 200px;
-    width: 780px;
+    width: 95%;
     background: #fff;
     table {
         padding: 0 0 0 0;
@@ -267,4 +280,23 @@ export const ContainerDadosPessoais = styled.div`
     flex-direction: row;
     align-items: center;
     width: 100%;
+
+    > div {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+
+        input {
+            background: #eee;
+            width: 90%;
+            text-align: left;
+            background: rgba(5, 5, 5, 0.1);
+            border: 0;
+            height: 30px;
+            padding: 0 15px;
+            margin: 0 20px 10px;
+        }
+    }
 `;

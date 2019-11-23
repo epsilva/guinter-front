@@ -74,7 +74,15 @@ export const ContainerTable = styled.div`
                 text-align: left;
                 padding: 8px;
 
-                :nth-child(even) {
+                :nth-child(2) {
+                    text-align: center;
+                }
+
+                :nth-child(3) {
+                    text-align: center;
+                }
+
+                :nth-child(4) {
                     text-align: center;
                 }
             }
