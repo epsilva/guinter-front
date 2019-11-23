@@ -36,7 +36,7 @@ export default function Cliente() {
             }
         }
 
-        // loadClientes();
+        loadClientes();
     }, []);
 
     function handleOpenModal() {
