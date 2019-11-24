@@ -84,12 +84,12 @@ export default function Cliente() {
                             <th />
                         </tr>
                     </thead>
-                    {/* <tbody>
+                    <tbody>
                         {loading ||
                             clientes.map(cliente => (
                                 <tr>
                                     <td>{cliente.nome}</td>
-                                    <td>
+                                    {/* <td>
                                         {cliente.contatos.length > 0
                                             ? cliente.contatos.map(
                                                   contato =>
@@ -108,7 +108,7 @@ export default function Cliente() {
                                                       contato.email
                                               )
                                             : '-'}
-                                    </td>
+                                    </td> */}
                                     <td>{maskCpfCnpj(cliente.cpfcnpj)}</td>
                                     <th>
                                         <button
@@ -135,7 +135,7 @@ export default function Cliente() {
                                     </th>
                                 </tr>
                             ))}
-                    </tbody> */}
+                    </tbody>
                 </table>
                 {loading && <Loading />}
                 {error && <Error />}
