@@ -39,9 +39,9 @@ export default function Contato({ parent, contato, isVsible, contatos }) {
 
     function hadnleOnSubmit(data, { resetForm }) {
         const [, setOpenModalContato] = parent;
-        if (Object.keys(selectedContato).length !== 0) {
-            contatos.splice(selectedContato);
-        }
+        // if (Object.keys(selectedContato).length !== 0) {
+        //     contatos.splice(selectedContato);
+        // }
         dispatch(insertRequest(data));
 
         setOpenModalContato(false);

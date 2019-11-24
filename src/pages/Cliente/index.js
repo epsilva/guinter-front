@@ -128,6 +128,7 @@ export default function Cliente() {
                                             onClick={() =>
                                                 handleOpenEditModal(cliente)
                                             }
+                                            hidden
                                         >
                                             <MdEdit size={20} />
                                         </button>

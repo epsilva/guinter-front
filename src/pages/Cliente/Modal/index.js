@@ -291,6 +291,7 @@ export default function Modal({ parent, cliente, isVsible }) {
                                                             contato
                                                         )
                                                     }
+                                                    hidden
                                                 >
                                                     <MdEdit size={20} />
                                                 </button>
