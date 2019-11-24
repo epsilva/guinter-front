@@ -28,7 +28,6 @@ export default function Cliente() {
             setLoading(true);
             try {
                 const response = await api.get('clientes');
-                console.log(response);
                 setClientes(response.data);
                 setLoading(false);
             } catch (err) {
