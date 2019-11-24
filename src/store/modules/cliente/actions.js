@@ -1,13 +1,27 @@
 export function insertRequest(data) {
     return {
-        type: '@cliente/INSERT_IN_REQUEST',
+        type: '@cliente/INSERT_REQUEST',
         payload: { data },
     };
 }
 
 export function insertSucces(data) {
     return {
-        type: '@cliente/INSERT_IN_SUCCESS',
+        type: '@cliente/INSERT_SUCCESS',
+        payload: { data },
+    };
+}
+
+export function deleteRequest(data) {
+    return {
+        type: '@cliente/DELETE_REQUEST',
+        payload: { data },
+    };
+}
+
+export function deleteSucces(data) {
+    return {
+        type: '@cliente/DELETE_SUCCESS',
         payload: { data },
     };
 }

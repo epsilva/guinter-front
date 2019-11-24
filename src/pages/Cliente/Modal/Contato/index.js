@@ -15,10 +15,11 @@ const schema = Yup.object().shape({
     principal: Yup.boolean(),
 });
 
-export default function Contato({ parent, contato, isVsible }) {
+export default function Contato({ parent, contato, isVsible, contatos }) {
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [selectedContato, setSelectedContato] = useState({});
     const [visible, setIsVisible] = useState(true);
+    const [contatoMain, setContatoMain] = useState(false);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -29,17 +30,28 @@ export default function Contato({ parent, contato, isVsible }) {
             setSelectedContato(contato);
         }
 
+        contatos.map(ct => {
+            if (ct.principal) {
+                setContatoMain(true);
+            }
+        });
+
         setIsVisible(isVsible);
-    }, [contato, isVsible, parent]);
+    }, [contato, isVsible, parent, contatos]);
 
     function handleCloseModal() {
         const [, setOpenModalContato] = parent;
         setOpenModalContato(false);
     }
 
-    function hadnleOnSubmit(data) {
+    function hadnleOnSubmit(data, { resetForm }) {
+        const [, setOpenModalContato] = parent;
         dispatch(insertRequest(data));
+        setOpenModalContato(false);
+        resetForm();
     }
+
+    function handleDelete() {}
 
     function handleChangeTelefone(e) {
         e.target.value = maskTelefone(e.target.value);
@@ -89,7 +101,7 @@ export default function Contato({ parent, contato, isVsible }) {
                             <Check
                                 name="principal"
                                 label="Contato principal?"
-                                disabled={visible}
+                                disabled={visible || contatoMain}
                             />
                         </div>
                         <ContainerButton>

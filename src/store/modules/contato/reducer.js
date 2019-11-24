@@ -2,6 +2,7 @@ import { produce } from 'immer';
 
 const INITIAL_STATE = {
     data: {},
+    contatos: [],
     loading: false,
 };
 
@@ -14,7 +15,7 @@ export default function auth(state = INITIAL_STATE, action) {
                 break;
             }
             case '@contato/INSERT_SUCCESS': {
-                draft.token = action.payload.token;
+                draft.data = action.payload.data;
                 draft.loading = false;
                 break;
             }

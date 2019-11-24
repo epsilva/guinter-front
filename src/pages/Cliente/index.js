@@ -6,6 +6,7 @@ import {
     MdDelete,
     MdVisibility,
 } from 'react-icons/md';
+import { useSelector, useDispatch } from 'react-redux';
 import Modal from '~/pages/Cliente/Modal';
 import api from '~/services/api';
 import Loading from '~/components/Loading';
@@ -13,14 +14,18 @@ import Error from '~/components/Error';
 
 import { Container, SearchBar, ContainerTable } from './styles';
 import { maskCpfCnpj, maskTelefone } from '~/components/Masks';
+import { deleteRequest } from '~/store/modules/cliente/actions';
 
 export default function Cliente() {
+    const dispatch = useDispatch();
     const [openModal, setOpenModal] = useState(false);
     const [clientes, setClientes] = useState([]);
     const [selectedCliente, setSelectedCliente] = useState({});
     const [visible, setVisible] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
+
+    const newCliente = useSelector(state => state.cliente.data);
 
     useEffect(() => {
         setClientes([]);
@@ -37,7 +42,7 @@ export default function Cliente() {
         }
 
         loadClientes();
-    }, []);
+    }, [newCliente]);
 
     function handleOpenModal() {
         setSelectedCliente({});
@@ -55,6 +60,13 @@ export default function Cliente() {
         setSelectedCliente(cliente);
         setVisible(true);
         setOpenModal(!openModal);
+    }
+
+    function handleDelete(cliente) {
+        const data = {
+            id: cliente.id,
+        };
+        dispatch(deleteRequest(data));
     }
 
     return (
@@ -81,7 +93,7 @@ export default function Cliente() {
                             <th>Contato</th>
                             <th>E-mail</th>
                             <th>CPF/CNPJ</th>
-                            <th />
+                            <th> </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -129,7 +141,12 @@ export default function Cliente() {
                                         >
                                             <MdVisibility size={20} />
                                         </button>
-                                        <button type="button">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                handleDelete(cliente)
+                                            }
+                                        >
                                             <MdDelete size={20} />
                                         </button>
                                     </th>

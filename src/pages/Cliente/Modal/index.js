@@ -7,6 +7,7 @@ import {
     MdEdit,
     MdDelete,
     MdVisibility,
+    MdStar,
 } from 'react-icons/md';
 import { Form, Input } from '@rocketseat/unform';
 import * as Yup from 'yup';
@@ -22,6 +23,8 @@ import {
 } from './styles';
 
 import ModalContato from '~/pages/Cliente/Modal/Contato';
+import { insertRequest } from '~/store/modules/cliente/actions';
+import Loading from '~/components/Loading';
 
 const schema = Yup.object().shape({
     nome: Yup.string().required('O Nome é obrigatório'),
@@ -35,6 +38,7 @@ const schema = Yup.object().shape({
 });
 
 export default function Modal({ parent, cliente, isVsible }) {
+    const dispatch = useDispatch();
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [openModalContato, setOpenModalContato] = useState(false);
     const [selectedCliente, setSelectedCliente] = useState({});
@@ -43,13 +47,20 @@ export default function Modal({ parent, cliente, isVsible }) {
     const [visible, setVisible] = useState(false);
 
     const contatosAdd = useSelector(state => state.contato.data);
+    const loading = useSelector(state => state.cliente.loading);
 
     const [contatos, setContatos] = useState([]);
     const [visivel, setVisivel] = useState(true);
 
     useEffect(() => {
         if (Object.keys(contatosAdd).length !== 0) {
-            contatos.push(contatosAdd);
+            const contato = {
+                nome: contatosAdd.nome,
+                telefone: contatosAdd.telefone.replace(/[^0-9]+/g, ''),
+                email: contatosAdd.email,
+                principal: contatosAdd.principal,
+            };
+            contatos.push(contato);
             setContatos(contatos);
         }
     }, [contatos, contatosAdd]);
@@ -91,7 +102,6 @@ export default function Modal({ parent, cliente, isVsible }) {
 
     function handleOpenModalContato() {
         setOpenModalContato(!openModalContato);
-        setSelectedContato({});
         setVisible(false);
     }
 
@@ -99,8 +109,9 @@ export default function Modal({ parent, cliente, isVsible }) {
         e.target.value = maskCpfCnpj(e.target.value);
     }
 
-    function handleOnSubmit(data) {
-        const dadosCliente = {
+    function handleOnSubmit(data, { resetForm }) {
+        const [, setOpenModal] = parent;
+        const dados = {
             nome: data.nome,
             cpfcnpj: data.cpfcnpj.replace(/[^0-9]+/g, ''),
             enderecos: {
@@ -109,12 +120,16 @@ export default function Modal({ parent, cliente, isVsible }) {
                 bairro: data.bairro,
                 cidade: data.cidade,
                 estado: data.estado,
-                complemento: data.complemento,
+                complemento: data.complemento || '',
             },
-            contaos: contatos,
+            contatos,
         };
 
-        console.tron.log(dadosCliente);
+        dispatch(insertRequest(dados));
+
+        resetForm();
+        setContatos([]);
+        setOpenModal(false);
     }
 
     function handleOpenEditModal(contato) {
@@ -135,11 +150,16 @@ export default function Modal({ parent, cliente, isVsible }) {
                 <ModalContato
                     parent={[openModalContato, setOpenModalContato]}
                     contato={selectedContato}
+                    contatos={contatos}
                     isVsible={visible}
                 />
                 <header>
                     <strong>Cliente</strong>
-                    <button type="button" onClick={handleCloseModal}>
+                    <button
+                        type="button"
+                        onClick={handleCloseModal}
+                        hidden={loading}
+                    >
                         <MdClose size={32} color="#999" />
                     </button>
                 </header>
@@ -232,7 +252,7 @@ export default function Modal({ parent, cliente, isVsible }) {
                                         <button
                                             type="button"
                                             onClick={handleOpenModalContato}
-                                            hidden={isVsible}
+                                            hidden={isVsible || loading}
                                         >
                                             <MdAdd size={20} color="#fff" />
                                         </button>
@@ -243,7 +263,15 @@ export default function Modal({ parent, cliente, isVsible }) {
                                 {contatos ? (
                                     contatos.map(contato => (
                                         <tr>
-                                            <td>{contato.nome}</td>
+                                            {contato.principal ? (
+                                                <td>
+                                                    <MdStar color="orange" />{' '}
+                                                    {contato.nome}
+                                                </td>
+                                            ) : (
+                                                <td>{contato.nome}</td>
+                                            )}
+
                                             <td>
                                                 {maskTelefone(contato.telefone)}
                                             </td>
@@ -285,16 +313,20 @@ export default function Modal({ parent, cliente, isVsible }) {
                             </tbody>
                         </table>
                     </ContainerTable>
-                    <ContainerButton>
-                        {visivel || (
-                            <button type="submit">
-                                <MdSave size={42} color="#3b9eff" />
+                    {loading ? (
+                        <Loading />
+                    ) : (
+                        <ContainerButton>
+                            {visivel || (
+                                <button type="submit">
+                                    <MdSave size={42} color="#3b9eff" />
+                                </button>
+                            )}
+                            <button type="button" onClick={handleCloseModal}>
+                                <MdCancel size={42} color="#fb6f91" />
                             </button>
-                        )}
-                        <button type="button" onClick={handleCloseModal}>
-                            <MdCancel size={42} color="#fb6f91" />
-                        </button>
-                    </ContainerButton>
+                        </ContainerButton>
+                    )}
                 </Form>
             </Container>
         </ModalPopup>
