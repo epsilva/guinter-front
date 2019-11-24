@@ -28,6 +28,7 @@ export default function Cliente() {
             setLoading(true);
             try {
                 const response = await api.get('clientes');
+                console.log(response.data);
                 setClientes(response.data);
                 setLoading(false);
             } catch (err) {
@@ -89,7 +90,7 @@ export default function Cliente() {
                             clientes.map(cliente => (
                                 <tr>
                                     <td>{cliente.nome}</td>
-                                    {/* <td>
+                                    <td>
                                         {cliente.contatos.length > 0
                                             ? cliente.contatos.map(
                                                   contato =>
@@ -108,7 +109,7 @@ export default function Cliente() {
                                                       contato.email
                                               )
                                             : '-'}
-                                    </td> */}
+                                    </td>
                                     <td>{maskCpfCnpj(cliente.cpfcnpj)}</td>
                                     <th>
                                         <button
