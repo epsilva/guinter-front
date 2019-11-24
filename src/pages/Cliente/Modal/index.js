@@ -63,7 +63,8 @@ export default function Modal({ parent, cliente, isVsible }) {
             contatos.push(contato);
             setContatos(contatos);
         }
-    }, [contatos, contatosAdd]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [contatosAdd]);
 
     useEffect(() => {
         setVisivel(isVsible);
@@ -130,6 +131,11 @@ export default function Modal({ parent, cliente, isVsible }) {
         resetForm();
         setContatos([]);
         setOpenModal(false);
+    }
+
+    function handleDelete(contato) {
+        contatos.splice(contato);
+        setContatos(contatos);
     }
 
     function handleOpenEditModal(contato) {
@@ -301,6 +307,9 @@ export default function Modal({ parent, cliente, isVsible }) {
                                                 <button
                                                     type="button"
                                                     hidden={isVsible}
+                                                    onClick={() =>
+                                                        handleDelete(contato)
+                                                    }
                                                 >
                                                     <MdDelete size={20} />
                                                 </button>

@@ -1,6 +1,6 @@
 import { takeLatest, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
-import { insertSucces, deleteSucces, contatoFailure } from './actions';
+import { insertSucces, updateSucces, contatoFailure } from './actions';
 
 export function* insert({ payload }) {
     try {

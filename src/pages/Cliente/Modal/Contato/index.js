@@ -19,7 +19,6 @@ export default function Contato({ parent, contato, isVsible, contatos }) {
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [selectedContato, setSelectedContato] = useState({});
     const [visible, setIsVisible] = useState(true);
-    const [contatoMain, setContatoMain] = useState(false);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -29,12 +28,6 @@ export default function Contato({ parent, contato, isVsible, contatos }) {
         if (Object.keys(contato).length !== 0) {
             setSelectedContato(contato);
         }
-
-        contatos.map(ct => {
-            if (ct.principal) {
-                setContatoMain(true);
-            }
-        });
 
         setIsVisible(isVsible);
     }, [contato, isVsible, parent, contatos]);
@@ -46,12 +39,14 @@ export default function Contato({ parent, contato, isVsible, contatos }) {
 
     function hadnleOnSubmit(data, { resetForm }) {
         const [, setOpenModalContato] = parent;
+        if (Object.keys(selectedContato).length !== 0) {
+            contatos.splice(selectedContato);
+        }
         dispatch(insertRequest(data));
+
         setOpenModalContato(false);
         resetForm();
     }
-
-    function handleDelete() {}
 
     function handleChangeTelefone(e) {
         e.target.value = maskTelefone(e.target.value);
@@ -101,7 +96,7 @@ export default function Contato({ parent, contato, isVsible, contatos }) {
                             <Check
                                 name="principal"
                                 label="Contato principal?"
-                                disabled={visible || contatoMain}
+                                disabled={visible}
                             />
                         </div>
                         <ContainerButton>

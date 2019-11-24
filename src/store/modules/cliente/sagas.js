@@ -22,7 +22,7 @@ export function* remover({ payload }) {
     try {
         const { data } = payload;
 
-        const response = yield call(api.delete, 'clientes', '1');
+        const response = yield call(api.delete, `clientes/${data.id}`);
 
         yield put(deleteSucces(response.data));
 
