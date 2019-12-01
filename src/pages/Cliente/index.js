@@ -13,7 +13,7 @@ import Loading from '~/components/Loading';
 import Error from '~/components/Error';
 
 import { Container, SearchBar, ContainerTable } from './styles';
-import { maskCpfCnpj, maskTelefone } from '~/components/Masks';
+import { maskCpfCnpjTable, maskTelefone } from '~/components/Masks';
 import { deleteRequest } from '~/store/modules/cliente/actions';
 
 export default function Cliente() {
@@ -45,7 +45,13 @@ export default function Cliente() {
     }, [newCliente]);
 
     function handleOpenModal() {
-        setSelectedCliente({});
+        setSelectedCliente({
+            id: '',
+            nome: '',
+            cpfcnpj: '',
+            enderecos: {},
+            contatos: [],
+        });
         setVisible(false);
         setOpenModal(!openModal);
     }
@@ -81,7 +87,11 @@ export default function Cliente() {
                     <MdSearch size={36} />
                 </i>
                 <input type="text" placeholder="Pesquisar cliente" />
-                <button type="button" onClick={handleOpenModal}>
+                <button
+                    type="button"
+                    onClick={handleOpenModal}
+                    title="Cadastrar"
+                >
                     <MdPersonAdd size={36} color="#3b9eff" />
                 </button>
             </SearchBar>
@@ -99,7 +109,7 @@ export default function Cliente() {
                     <tbody>
                         {loading ||
                             clientes.map(cliente => (
-                                <tr>
+                                <tr key={cliente.id}>
                                     <td>{cliente.nome}</td>
                                     <td>
                                         {cliente.contatos.length > 0
@@ -121,19 +131,20 @@ export default function Cliente() {
                                               )
                                             : '-'}
                                     </td>
-                                    <td>{maskCpfCnpj(cliente.cpfcnpj)}</td>
+                                    <td>{maskCpfCnpjTable(cliente.cpfcnpj)}</td>
                                     <th>
                                         <button
                                             type="button"
+                                            title="Alterar"
                                             onClick={() =>
                                                 handleOpenEditModal(cliente)
                                             }
-                                            hidden
                                         >
                                             <MdEdit size={20} />
                                         </button>
                                         <button
                                             type="button"
+                                            title="Visualizar"
                                             onClick={() =>
                                                 handleOpenVisualizarModal(
                                                     cliente
@@ -144,6 +155,7 @@ export default function Cliente() {
                                         </button>
                                         <button
                                             type="button"
+                                            title="Excluir"
                                             onClick={() =>
                                                 handleDelete(cliente)
                                             }

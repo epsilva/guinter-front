@@ -18,6 +18,16 @@ export default function auth(state = INITIAL_STATE, action) {
                 draft.loading = false;
                 break;
             }
+            case '@cliente/UPDATE_REQUEST': {
+                draft.loading = true;
+                draft.data = action.payload.data;
+                break;
+            }
+            case '@cliente/UPDATE_SUCCESS': {
+                draft.data = action.payload.data;
+                draft.loading = false;
+                break;
+            }
             case '@cliente/DELETE_REQUEST': {
                 draft.loading = true;
                 draft.data = action.payload.data;

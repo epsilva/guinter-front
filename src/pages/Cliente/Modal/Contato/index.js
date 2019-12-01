@@ -1,118 +1,178 @@
 import React, { useState, useEffect } from 'react';
 import { MdClose, MdSave, MdCancel } from 'react-icons/md';
-
-import { Form, Input, Check } from '@rocketseat/unform';
-import { useDispatch } from 'react-redux';
-import * as Yup from 'yup';
+import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
+import useForm from 'react-hook-form';
 import { Container, Modal, ContainerContatos, ContainerButton } from './styles';
-import { insertRequest } from '~/store/modules/contato/actions';
 import { maskTelefone } from '~/components/Masks';
 
-const schema = Yup.object().shape({
-    nome: Yup.string().required('O Nome é obrigatório'),
-    telefone: Yup.string().required('O Telefone é obrigatório'),
-    email: Yup.string().email('Insira um e-mail válido'),
-    principal: Yup.boolean(),
-});
+export default function Contato({ parent, isVsible, listaContato, contato }) {
+    const { register, handleSubmit, errors, reset, setValue } = useForm({});
 
-export default function Contato({ parent, contato, isVsible, contatos }) {
     const [isOpenModal, setIsOpenModal] = useState(false);
-    const [selectedContato, setSelectedContato] = useState({});
     const [visible, setIsVisible] = useState(true);
-    const dispatch = useDispatch();
 
     useEffect(() => {
         const [openModalContato] = parent;
         setIsOpenModal(openModalContato);
-        setSelectedContato({ principal: false });
-        if (Object.keys(contato).length !== 0) {
-            setSelectedContato(contato);
-        }
-
         setIsVisible(isVsible);
-    }, [contato, isVsible, parent, contatos]);
+        if (Object.keys(contato).length !== 0) {
+            setValue('nome', contato.nome);
+            setValue('telefone', maskTelefone(contato.telefone));
+            setValue('email', contato.email);
+            setValue('principal', contato.principal);
+        }
+    }, [contato, isVsible, parent, setValue]);
 
     function handleCloseModal() {
         const [, setOpenModalContato] = parent;
         setOpenModalContato(false);
     }
 
-    function hadnleOnSubmit(data, { resetForm }) {
-        const [, setOpenModalContato] = parent;
-        // if (Object.keys(selectedContato).length !== 0) {
-        //     contatos.splice(selectedContato);
-        // }
-        dispatch(insertRequest(data));
-
-        setOpenModalContato(false);
-        resetForm();
-    }
-
     function handleChangeTelefone(e) {
         e.target.value = maskTelefone(e.target.value);
     }
+
+    const onSubmit = data => {
+        const [contatos, setContatos] = listaContato;
+        const listContato = [];
+
+        contatos.map(cont => {
+            if (contato.telefone !== cont.telefone) {
+                listContato.push(cont);
+            }
+        });
+
+        const isValido = listContato.map(listCont => {
+            if (
+                listCont.telefone.replace(/[^0-9]+/g, '') ===
+                data.telefone.replace(/[^0-9]+/g, '')
+            ) {
+                toast.error('Telefone já cadastrado');
+                return true;
+            }
+            if (listCont.email === data.email) {
+                toast.error('E-mail já cadastrado');
+                return true;
+            }
+            if (listCont.principal && data.principal) {
+                toast.error('Contato principal já cadastrado');
+                return true;
+            }
+        });
+        listContato.push(data);
+
+        if (isValido[0] === undefined) {
+            setContatos(listContato);
+            reset({
+                nome: '',
+                telefone: '',
+                email: '',
+                principal: false,
+            });
+        }
+    };
 
     return (
         <Modal isOpen={isOpenModal}>
             <Container isOpen={isOpenModal}>
                 <header>
                     <strong>Contatos</strong>
-                    <button type="button" onClick={handleCloseModal}>
+                    <button
+                        type="button"
+                        onClick={handleCloseModal}
+                        title="Fechar"
+                    >
                         <MdClose size={32} color="#999" />
                     </button>
                 </header>
-                <Form
-                    initialData={selectedContato}
-                    schema={schema}
-                    onSubmit={hadnleOnSubmit}
-                >
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <ContainerContatos>
                         <div className="field">
-                            <Input
+                            <input
                                 type="text"
                                 name="nome"
                                 placeholder="Nome do contato"
                                 disabled={visible}
+                                ref={register({ required: true })}
                             />
+                            {errors.nome && <span>O nome é obrigatório.</span>}
                         </div>
                         <div className="field">
-                            <Input
+                            <input
                                 type="text"
                                 name="telefone"
                                 placeholder="Telefone"
                                 onChange={handleChangeTelefone}
                                 disabled={visible}
+                                ref={register({ required: true })}
                             />
+                            {errors.telefone && (
+                                <span>O telefone é obrigatório.</span>
+                            )}
                         </div>
                         <div className="field">
-                            <Input
+                            <input
                                 type="email"
                                 name="email"
                                 placeholder="E-mail"
                                 disabled={visible}
+                                ref={register({
+                                    pattern: {
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                                        message: 'Endereço de e-mail inválido',
+                                    },
+                                })}
                             />
+                            {errors.email && (
+                                <span>{errors.email.message}</span>
+                            )}
                         </div>
                         <div className="check">
-                            <Check
+                            <label>Contato Principal:</label>
+                            <input
+                                type="checkbox"
                                 name="principal"
-                                label="Contato principal?"
                                 disabled={visible}
+                                onSelect={contato.principal}
+                                ref={register}
                             />
                         </div>
                         <ContainerButton>
                             {visible || (
-                                <button type="submit">
+                                <button type="submit" title="Salvar">
                                     <MdSave size={42} color="#3b9eff" />
                                 </button>
                             )}
 
-                            <button type="button" onClick={handleCloseModal}>
+                            <button
+                                type="button"
+                                onClick={handleCloseModal}
+                                title="Fechar"
+                            >
                                 <MdCancel size={42} color="#fb6f91" />
                             </button>
                         </ContainerButton>
                     </ContainerContatos>
-                </Form>
+                </form>
             </Container>
         </Modal>
     );
 }
+
+Contato.propTypes = {
+    parent: PropTypes.func.isRequired,
+    isVsible: PropTypes.bool.isRequired,
+    contatos: PropTypes.shape({
+        nome: PropTypes.string.isRequired,
+        email: PropTypes.string,
+        telefone: PropTypes.string.isRequired,
+        principal: PropTypes.bool.isRequired,
+    }).isRequired,
+    contato: PropTypes.shape({
+        nome: PropTypes.string.isRequired,
+        email: PropTypes.string,
+        telefone: PropTypes.string.isRequired,
+        principal: PropTypes.bool.isRequired,
+    }).isRequired,
+};

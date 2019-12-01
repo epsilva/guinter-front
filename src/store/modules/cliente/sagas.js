@@ -1,6 +1,11 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
 import { toast } from 'react-toastify';
-import { insertSucces, deleteSucces, clienteFailure } from './actions';
+import {
+    insertSucces,
+    updateSucces,
+    deleteSucces,
+    clienteFailure,
+} from './actions';
 import api from '~/services/api';
 
 export function* insert({ payload }) {
@@ -12,6 +17,21 @@ export function* insert({ payload }) {
         yield put(insertSucces(response.data));
 
         toast.success('Cliente inserido com sucesso');
+    } catch (err) {
+        toast.error('Falha na operação, verifique seus dados.');
+        yield put(clienteFailure());
+    }
+}
+
+export function* update({ payload }) {
+    try {
+        const { data } = payload;
+
+        const response = yield call(api.put, 'clientes', data);
+
+        yield put(updateSucces(response.data));
+
+        toast.success('Cliente atualizado com sucesso');
     } catch (err) {
         toast.error('Falha na operação, verifique seus dados.');
         yield put(clienteFailure());
@@ -36,5 +56,6 @@ export function* remover({ payload }) {
 
 export default all([
     takeLatest('@cliente/INSERT_REQUEST', insert),
+    takeLatest('@cliente/UPDATE_REQUEST', update),
     takeLatest('@cliente/DELETE_REQUEST', remover),
 ]);

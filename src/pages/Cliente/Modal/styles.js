@@ -99,7 +99,7 @@ export const ContainerEnd = styled.div`
             border: 0;
             height: 30px;
             padding: 0 15px;
-            margin: 0 20px 10px;
+            margin: 0 30px 10px;
         }
     }
 `;
@@ -131,7 +131,7 @@ export const ContainerTable = styled.div`
     margin-top: 2px;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.7);
     height: 200px;
-    width: 95%;
+    width: 98%;
     background: #fff;
     table {
         padding: 0 0 0 0;
@@ -285,7 +285,6 @@ export const ContainerDadosPessoais = styled.div`
         display: flex;
         justify-content: center;
         flex-direction: column;
-        align-items: center;
         width: 100%;
 
         input {
@@ -296,7 +295,7 @@ export const ContainerDadosPessoais = styled.div`
             border: 0;
             height: 30px;
             padding: 0 15px;
-            margin: 0 20px 10px;
+            margin: 0 30px 10px;
         }
     }
 `;

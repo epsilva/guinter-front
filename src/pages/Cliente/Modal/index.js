@@ -9,10 +9,14 @@ import {
     MdVisibility,
     MdStar,
 } from 'react-icons/md';
-import { Form, Input } from '@rocketseat/unform';
-import * as Yup from 'yup';
+import useForm from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
-import { maskCpfCnpj, maskTelefone } from '~/components/Masks';
+import PropTypes from 'prop-types';
+import {
+    maskCpfCnpj,
+    maskTelefone,
+    maskCpfCnpjTable,
+} from '~/components/Masks';
 import {
     Container,
     ModalPopup,
@@ -23,119 +27,88 @@ import {
 } from './styles';
 
 import ModalContato from '~/pages/Cliente/Modal/Contato';
-import { insertRequest } from '~/store/modules/cliente/actions';
+import { insertRequest, updateRequest } from '~/store/modules/cliente/actions';
 import Loading from '~/components/Loading';
 
-const schema = Yup.object().shape({
-    nome: Yup.string().required('O Nome é obrigatório'),
-    cpfcnpj: Yup.string().required('O CPF/CNPJ é obrigatório'),
-    estado: Yup.string().required('O Estado é obrigatório'),
-    cidade: Yup.string().required('A Cidade é obrigatória'),
-    bairro: Yup.string().required('O Bairro é obrigatório'),
-    rua: Yup.string().required('A rua é obrigatório'),
-    numero: Yup.string().required('O Número é obrigatório'),
-    complemento: Yup.string(),
-});
-
 export default function Modal({ parent, cliente, isVsible }) {
+    const { register, handleSubmit, errors, reset, setValue } = useForm({});
+
     const dispatch = useDispatch();
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [openModalContato, setOpenModalContato] = useState(false);
-    const [selectedCliente, setSelectedCliente] = useState({});
-    const [dadosCliente, setDadosCliente] = useState({});
     const [selectedContato, setSelectedContato] = useState({});
     const [visible, setVisible] = useState(false);
 
-    const contatosAdd = useSelector(state => state.contato.data);
     const loading = useSelector(state => state.cliente.loading);
 
     const [contatos, setContatos] = useState([]);
     const [visivel, setVisivel] = useState(true);
 
     useEffect(() => {
-        if (Object.keys(contatosAdd).length !== 0) {
-            const contato = {
-                nome: contatosAdd.nome,
-                telefone: contatosAdd.telefone.replace(/[^0-9]+/g, ''),
-                email: contatosAdd.email,
-                principal: contatosAdd.principal,
-            };
-            contatos.push(contato);
-            setContatos(contatos);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [contatosAdd]);
-
-    useEffect(() => {
         setVisivel(isVsible);
     }, [isVsible]);
 
     useEffect(() => {
-        setSelectedCliente(cliente);
-        setDadosCliente({});
-        if (cliente && cliente.enderecos) {
-            setDadosCliente({
-                nome: cliente.nome,
-                cpfcnpj: cliente.cpfcnpj,
-                estado: cliente.enderecos.estado,
-                cidade: cliente.enderecos.cidade,
-                bairro: cliente.enderecos.bairro,
-                rua: cliente.enderecos.rua,
-                numero: cliente.enderecos.numero,
-                complemento: cliente.enderecos.complemento,
-            });
-            setContatos(cliente.contatos);
-        } else {
-            setDadosCliente({});
-            setContatos([]);
-        }
-    }, [cliente]);
-
-    useEffect(() => {
         const [openModal] = parent;
         setIsOpenModal(openModal);
-    }, [parent]);
+        if (cliente && cliente.enderecos) {
+            setValue('nome', cliente.nome);
+            setValue('cpfcnpj', maskCpfCnpjTable(cliente.cpfcnpj));
+            setValue('estado', cliente.enderecos.estado);
+            setValue('cidade', cliente.enderecos.cidade);
+            setValue('rua', cliente.enderecos.rua);
+            setValue('numero', cliente.enderecos.numero);
+            setValue('complemento', cliente.enderecos.complemento);
+            setValue('bairro', cliente.enderecos.bairro);
+            setContatos(cliente.contatos);
+        }
+    }, [cliente, parent, setValue]);
+
+    function resetForm() {
+        reset({
+            nome: '',
+            cpfcnpj: '',
+            estado: '',
+            cidade: '',
+            bairro: '',
+            rua: '',
+            numero: '',
+            complemento: '',
+        });
+    }
 
     function handleCloseModal() {
         const [, setOpenModal] = parent;
         setOpenModal(false);
+        resetForm();
     }
 
     function handleOpenModalContato() {
         setOpenModalContato(!openModalContato);
         setVisible(false);
+        setSelectedContato({
+            id: '',
+            nome: '',
+            telefone: '',
+            email: '',
+            principal: false,
+        });
     }
 
     function handlechangeCpfCnpj(e) {
         e.target.value = maskCpfCnpj(e.target.value);
     }
 
-    function handleOnSubmit(data, { resetForm }) {
-        const [, setOpenModal] = parent;
-        const dados = {
-            nome: data.nome,
-            cpfcnpj: data.cpfcnpj.replace(/[^0-9]+/g, ''),
-            enderecos: {
-                numero: data.numero,
-                rua: data.rua,
-                bairro: data.bairro,
-                cidade: data.cidade,
-                estado: data.estado,
-                complemento: data.complemento || '',
-            },
-            contatos,
-        };
-
-        dispatch(insertRequest(dados));
-
-        resetForm();
-        setContatos([]);
-        setOpenModal(false);
-    }
-
     function handleDelete(contato) {
-        contatos.splice(contato);
-        setContatos(contatos);
+        const listContato = [];
+
+        contatos.map(cont => {
+            if (contato.telefone !== cont.telefone) {
+                listContato.push(cont);
+            }
+        });
+
+        setContatos(listContato);
     }
 
     function handleOpenEditModal(contato) {
@@ -150,14 +123,38 @@ export default function Modal({ parent, cliente, isVsible }) {
         setOpenModalContato(!openModalContato);
     }
 
+    const onSubmit = data => {
+        const dadosCliente = {
+            id: cliente.id,
+            nome: data.nome,
+            cpfcnpj: data.cpfcnpj.replace(/[^0-9]+/g, ''),
+            enderecos: {
+                id: cliente.enderecos && cliente.enderecos.id,
+                numero: data.numero,
+                rua: data.rua,
+                bairro: data.bairro,
+                cidade: data.cidade,
+                estado: data.estado,
+                complemento: data.complemento || '',
+            },
+            contatos,
+        };
+        if (cliente.id) {
+            dispatch(updateRequest(dadosCliente));
+        } else {
+            dispatch(insertRequest(dadosCliente));
+        }
+        handleCloseModal();
+    };
+
     return (
         <ModalPopup isOpen={isOpenModal}>
             <Container isOpen={isOpenModal}>
                 <ModalContato
                     parent={[openModalContato, setOpenModalContato]}
                     contato={selectedContato}
-                    contatos={contatos}
                     isVsible={visible}
+                    listaContato={[contatos, setContatos]}
                 />
                 <header>
                     <strong>Cliente</strong>
@@ -165,84 +162,106 @@ export default function Modal({ parent, cliente, isVsible }) {
                         type="button"
                         onClick={handleCloseModal}
                         hidden={loading}
+                        title="Fechar"
                     >
                         <MdClose size={32} color="#999" />
                     </button>
                 </header>
 
-                <Form
-                    schema={schema}
-                    initialData={dadosCliente}
-                    onSubmit={handleOnSubmit}
-                >
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <h4>Dados Pessoais</h4>
                     <ContainerDadosPessoais>
                         <div>
-                            <Input
+                            <input
                                 type="text"
                                 name="nome"
                                 placeholder="Nome do cliente"
                                 disabled={isVsible}
+                                ref={register({ required: true })}
                             />
+                            {errors.nome && <span>O nome é obrigatório.</span>}
                         </div>
                         <div>
-                            <Input
+                            <input
                                 type="text"
                                 name="cpfcnpj"
                                 placeholder="CPJ/CNPJ"
                                 disabled={isVsible}
                                 onChange={handlechangeCpfCnpj}
+                                ref={register({ required: true })}
                             />
+                            {errors.cpfcnpj && (
+                                <span>O CPF/CNPJ é obrigatório.</span>
+                            )}
                         </div>
                     </ContainerDadosPessoais>
                     <h4>Endereço</h4>
                     <ContainerEnd>
                         <div>
-                            <Input
+                            <input
                                 type="text"
                                 name="estado"
                                 placeholder="Estado"
                                 disabled={isVsible}
+                                ref={register({ required: true })}
                             />
+                            {errors.estado && (
+                                <span>O estado é obrigatório.</span>
+                            )}
                         </div>
                         <div>
-                            <Input
+                            <input
                                 type="text"
                                 name="cidade"
                                 placeholder="Cidade"
                                 disabled={isVsible}
+                                ref={register({ required: true })}
                             />
+                            {errors.cidade && (
+                                <span>A cidade é obrigatória.</span>
+                            )}
                         </div>
                         <div>
-                            <Input
+                            <input
                                 type="text"
                                 name="bairro"
                                 placeholder="Bairro"
                                 disabled={isVsible}
+                                ref={register({ required: true })}
                             />
+                            {errors.bairro && (
+                                <span>O bairro é obrigatório.</span>
+                            )}
                         </div>
                         <div>
-                            <Input
+                            <input
                                 type="text"
                                 name="rua"
                                 placeholder="Rua"
                                 disabled={isVsible}
+                                ref={register({ required: true })}
                             />
+                            {errors.rua && <span>A Rua é obrigatória.</span>}
                         </div>
                         <div>
-                            <Input
+                            <input
                                 type="text"
                                 name="numero"
                                 placeholder="Número"
                                 disabled={isVsible}
+                                ref={register({ required: true })}
                             />
+                            {errors.numero && (
+                                <span>O número é obrigatório.</span>
+                            )}
                         </div>
                         <div>
-                            <Input
+                            <input
                                 type="text"
                                 name="complemento"
                                 placeholder="Complemento"
                                 disabled={isVsible}
+                                ref={register}
                             />
                         </div>
                     </ContainerEnd>
@@ -259,6 +278,7 @@ export default function Modal({ parent, cliente, isVsible }) {
                                             type="button"
                                             onClick={handleOpenModalContato}
                                             hidden={isVsible || loading}
+                                            title="Cadastrar"
                                         >
                                             <MdAdd size={20} color="#fff" />
                                         </button>
@@ -268,15 +288,15 @@ export default function Modal({ parent, cliente, isVsible }) {
                             <tbody>
                                 {contatos ? (
                                     contatos.map(contato => (
-                                        <tr>
+                                        <tr key={contato.telefone}>
                                             {contato.principal ? (
                                                 <td>
                                                     <MdStar color="orange" />{' '}
                                                     {contato.nome}
                                                 </td>
                                             ) : (
-                                                <td>{contato.nome}</td>
-                                            )}
+                                                    <td>{contato.nome}</td>
+                                                )}
 
                                             <td>
                                                 {maskTelefone(contato.telefone)}
@@ -286,17 +306,18 @@ export default function Modal({ parent, cliente, isVsible }) {
                                                 <button
                                                     type="button"
                                                     hidden={isVsible}
+                                                    title="Alterar"
                                                     onClick={() =>
                                                         handleOpenEditModal(
                                                             contato
                                                         )
                                                     }
-                                                    hidden
                                                 >
                                                     <MdEdit size={20} />
                                                 </button>
                                                 <button
                                                     type="button"
+                                                    title="Visualizar"
                                                     onClick={() =>
                                                         handleOpenVisualizarModal(
                                                             contato
@@ -308,6 +329,7 @@ export default function Modal({ parent, cliente, isVsible }) {
                                                 <button
                                                     type="button"
                                                     hidden={isVsible}
+                                                    title="Excluir"
                                                     onClick={() =>
                                                         handleDelete(contato)
                                                     }
@@ -318,27 +340,49 @@ export default function Modal({ parent, cliente, isVsible }) {
                                         </tr>
                                     ))
                                 ) : (
-                                    <tr />
-                                )}
+                                        <tr />
+                                    )}
                             </tbody>
                         </table>
                     </ContainerTable>
                     {loading ? (
                         <Loading />
                     ) : (
-                        <ContainerButton>
-                            {visivel || (
-                                <button type="submit">
-                                    <MdSave size={42} color="#3b9eff" />
+                            <ContainerButton>
+                                {visivel || (
+                                    <button type="submit" title="Salvar">
+                                        <MdSave size={42} color="#3b9eff" />
+                                    </button>
+                                )}
+                                <button
+                                    type="button"
+                                    onClick={handleCloseModal}
+                                    title="Fechar"
+                                >
+                                    <MdCancel size={42} color="#fb6f91" />
                                 </button>
-                            )}
-                            <button type="button" onClick={handleCloseModal}>
-                                <MdCancel size={42} color="#fb6f91" />
-                            </button>
-                        </ContainerButton>
-                    )}
-                </Form>
+                            </ContainerButton>
+                        )}
+                </form>
             </Container>
         </ModalPopup>
     );
 }
+
+Modal.propTypes = {
+    parent: PropTypes.func.isRequired,
+    isVsible: PropTypes.bool.isRequired,
+    cliente: PropTypes.shape({
+        nome: PropTypes.string.isRequired,
+        cpfcnpj: PropTypes.string.isRequired,
+        enderecos: PropTypes.shape({
+            estado: PropTypes.string.isRequired,
+            cidade: PropTypes.string.isRequired,
+            bairro: PropTypes.string.isRequired,
+            rua: PropTypes.string.isRequired,
+            numero: PropTypes.string.isRequired,
+            complemento: PropTypes.string.isRequired,
+        }).isRequired,
+        contatos: PropTypes.array.isRequired,
+    }).isRequired,
+};
