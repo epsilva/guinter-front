@@ -37,9 +37,9 @@ export default function Contato({ parent, isVsible, listaContato, contato }) {
         const [contatos, setContatos] = listaContato;
         const listContato = [];
 
-        contatos.map(cont => {
-            if (contato.telefone !== cont.telefone) {
-                listContato.push(cont);
+        contatos.array.forEach(element => {
+            if (contato.telefone !== element.telefone) {
+                listContato.push(element);
             }
         });
 
@@ -105,10 +105,19 @@ export default function Contato({ parent, isVsible, listaContato, contato }) {
                                 placeholder="Telefone"
                                 onChange={handleChangeTelefone}
                                 disabled={visible}
-                                ref={register({ required: true })}
+                                ref={register({
+                                    required: {
+                                        value: true,
+                                        message: 'O telefone é obrigatório.',
+                                    },
+                                    pattern: {
+                                        value: /^(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})-?(\d{4}))$/,
+                                        message: 'Telefone inválido.',
+                                    },
+                                })}
                             />
                             {errors.telefone && (
-                                <span>O telefone é obrigatório.</span>
+                                <span>{errors.telefone.message}</span>
                             )}
                         </div>
                         <div className="field">
@@ -129,14 +138,16 @@ export default function Contato({ parent, isVsible, listaContato, contato }) {
                             )}
                         </div>
                         <div className="check">
-                            <label>Contato Principal:</label>
-                            <input
-                                type="checkbox"
-                                name="principal"
-                                disabled={visible}
-                                onSelect={contato.principal}
-                                ref={register}
-                            />
+                            <label htmlFor="checkbox">
+                                Contato Principal:
+                                <input
+                                    type="checkbox"
+                                    name="principal"
+                                    disabled={visible}
+                                    onSelect={contato.principal}
+                                    ref={register}
+                                />
+                            </label>
                         </div>
                         <ContainerButton>
                             {visible || (
@@ -163,6 +174,7 @@ export default function Contato({ parent, isVsible, listaContato, contato }) {
 Contato.propTypes = {
     parent: PropTypes.func.isRequired,
     isVsible: PropTypes.bool.isRequired,
+    listaContato: PropTypes.func.isRequired,
     contatos: PropTypes.shape({
         nome: PropTypes.string.isRequired,
         email: PropTypes.string,

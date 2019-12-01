@@ -8,7 +8,7 @@ import {
 } from 'react-icons/md';
 import { useSelector, useDispatch } from 'react-redux';
 import Modal from '~/pages/Cliente/Modal';
-import api from '~/services/api';
+import { api } from '~/services/api';
 import Loading from '~/components/Loading';
 import Error from '~/components/Error';
 

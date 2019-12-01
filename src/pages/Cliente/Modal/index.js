@@ -12,6 +12,7 @@ import {
 import useForm from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import {
     maskCpfCnpj,
     maskTelefone,
@@ -25,10 +26,12 @@ import {
     ContainerButton,
     ContainerDadosPessoais,
 } from './styles';
+import { apiReceitaFederal } from '~/services/api';
 
 import ModalContato from '~/pages/Cliente/Modal/Contato';
 import { insertRequest, updateRequest } from '~/store/modules/cliente/actions';
 import Loading from '~/components/Loading';
+import { validacaoCpfCnpj } from '~/validations/cpfcnpj';
 
 export default function Modal({ parent, cliente, isVsible }) {
     const { register, handleSubmit, errors, reset, setValue } = useForm({});
@@ -102,9 +105,9 @@ export default function Modal({ parent, cliente, isVsible }) {
     function handleDelete(contato) {
         const listContato = [];
 
-        contatos.map(cont => {
-            if (contato.telefone !== cont.telefone) {
-                listContato.push(cont);
+        contatos.array.forEach(element => {
+            if (contato.telefone !== element.telefone) {
+                listContato.push(element);
             }
         });
 
@@ -147,6 +150,10 @@ export default function Modal({ parent, cliente, isVsible }) {
         handleCloseModal();
     };
 
+    function validarCpfCnpj(value) {
+        return validacaoCpfCnpj(value);
+    }
+
     return (
         <ModalPopup isOpen={isOpenModal}>
             <Container isOpen={isOpenModal}>
@@ -188,10 +195,18 @@ export default function Modal({ parent, cliente, isVsible }) {
                                 placeholder="CPJ/CNPJ"
                                 disabled={isVsible}
                                 onChange={handlechangeCpfCnpj}
-                                ref={register({ required: true })}
+                                ref={register({
+                                    pattern: {
+                                        value: /(^\d{3}\.\d{3}\.\d{3}-\d{2}$)|(^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$)/,
+                                        message: 'CPF/CNPJ inválido.',
+                                    },
+                                    validate: value =>
+                                        validarCpfCnpj(value) ||
+                                        'CPF/CNPJ inválido.',
+                                })}
                             />
                             {errors.cpfcnpj && (
-                                <span>O CPF/CNPJ é obrigatório.</span>
+                                <span>{errors.cpfcnpj.message}</span>
                             )}
                         </div>
                     </ContainerDadosPessoais>
@@ -295,8 +310,8 @@ export default function Modal({ parent, cliente, isVsible }) {
                                                     {contato.nome}
                                                 </td>
                                             ) : (
-                                                    <td>{contato.nome}</td>
-                                                )}
+                                                <td>{contato.nome}</td>
+                                            )}
 
                                             <td>
                                                 {maskTelefone(contato.telefone)}
@@ -340,29 +355,29 @@ export default function Modal({ parent, cliente, isVsible }) {
                                         </tr>
                                     ))
                                 ) : (
-                                        <tr />
-                                    )}
+                                    <tr />
+                                )}
                             </tbody>
                         </table>
                     </ContainerTable>
                     {loading ? (
                         <Loading />
                     ) : (
-                            <ContainerButton>
-                                {visivel || (
-                                    <button type="submit" title="Salvar">
-                                        <MdSave size={42} color="#3b9eff" />
-                                    </button>
-                                )}
-                                <button
-                                    type="button"
-                                    onClick={handleCloseModal}
-                                    title="Fechar"
-                                >
-                                    <MdCancel size={42} color="#fb6f91" />
+                        <ContainerButton>
+                            {visivel || (
+                                <button type="submit" title="Salvar">
+                                    <MdSave size={42} color="#3b9eff" />
                                 </button>
-                            </ContainerButton>
-                        )}
+                            )}
+                            <button
+                                type="button"
+                                onClick={handleCloseModal}
+                                title="Fechar"
+                            >
+                                <MdCancel size={42} color="#fb6f91" />
+                            </button>
+                        </ContainerButton>
+                    )}
                 </form>
             </Container>
         </ModalPopup>
@@ -373,9 +388,11 @@ Modal.propTypes = {
     parent: PropTypes.func.isRequired,
     isVsible: PropTypes.bool.isRequired,
     cliente: PropTypes.shape({
+        id: PropTypes.number,
         nome: PropTypes.string.isRequired,
         cpfcnpj: PropTypes.string.isRequired,
         enderecos: PropTypes.shape({
+            id: PropTypes.number,
             estado: PropTypes.string.isRequired,
             cidade: PropTypes.string.isRequired,
             bairro: PropTypes.string.isRequired,

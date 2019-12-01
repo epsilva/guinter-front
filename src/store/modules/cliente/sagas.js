@@ -6,7 +6,7 @@ import {
     deleteSucces,
     clienteFailure,
 } from './actions';
-import api from '~/services/api';
+import { api } from '~/services/api';
 
 export function* insert({ payload }) {
     try {
