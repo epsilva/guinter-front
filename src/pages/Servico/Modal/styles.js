@@ -22,7 +22,7 @@ const fadeOut = keyframes`
 
 export const Container = styled.div`
     display: flex;
-    width: 90%;
+    width: 30%;
     height: auto;
     background: #fff;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.7);
@@ -75,12 +75,6 @@ export const Container = styled.div`
             margin-left: 2%;
             align-items: center;
 
-            label {
-                justify-content: center;
-                align-items: center;
-                display: flex;
-            }
-
             > input {
                 width: 5%;
                 margin-right: 5px;
@@ -89,7 +83,7 @@ export const Container = styled.div`
     }
 `;
 
-export const Modal = styled.div`
+export const ModalPopup = styled.div`
     display: flex;
     visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
 
@@ -111,9 +105,9 @@ export const Modal = styled.div`
     justify-content: center;
 `;
 
-export const ContainerContatos = styled.div`
+export const ContainerProduto = styled.div`
     display: flex;
-    width: 100%;
+    width: 90%;
     flex-wrap: wrap;
 
     div.field {
@@ -121,11 +115,11 @@ export const ContainerContatos = styled.div`
         justify-content: center;
         flex-direction: column;
         align-items: center;
-        width: 50%;
+        width: 100%;
 
         input {
             background: #eee;
-            width: 90%;
+            width: 100%;
             text-align: left;
             background: rgba(5, 5, 5, 0.1);
             border: 0;

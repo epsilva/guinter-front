@@ -22,15 +22,17 @@ export default function Cliente() {
     const [clientes, setClientes] = useState([]);
     const [selectedCliente, setSelectedCliente] = useState({});
     const [visible, setVisible] = useState(false);
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
 
     const newCliente = useSelector(state => state.cliente.data);
+    const [loading, setLoading] = useState(
+        useSelector(state => state.cliente.loading)
+    );
 
     useEffect(() => {
         setClientes([]);
+        setLoading(true);
         async function loadClientes() {
-            setLoading(true);
             try {
                 const response = await api.get('clientes');
                 setClientes(response.data);
@@ -43,6 +45,23 @@ export default function Cliente() {
 
         loadClientes();
     }, [newCliente]);
+
+    async function handleSearch(e) {
+        try {
+            setLoading(true);
+            if (e.target.value) {
+                const response = await api.get(`clientes/${e.target.value}`);
+                setClientes(response.data);
+            } else {
+                const response = await api.get('clientes');
+                setClientes(response.data);
+            }
+            setLoading(false);
+        } catch (err) {
+            setError(true);
+            setLoading(false);
+        }
+    }
 
     function handleOpenModal() {
         setSelectedCliente({
@@ -86,7 +105,11 @@ export default function Cliente() {
                 <i>
                     <MdSearch size={36} />
                 </i>
-                <input type="text" placeholder="Pesquisar cliente" />
+                <input
+                    type="text"
+                    placeholder="Pesquisar cliente"
+                    onChange={handleSearch}
+                />
                 <button
                     type="button"
                     onClick={handleOpenModal}
@@ -131,7 +154,11 @@ export default function Cliente() {
                                               )
                                             : '-'}
                                     </td>
-                                    <td>{maskCpfCnpjTable(cliente.cpfcnpj)}</td>
+                                    <td>
+                                        {cliente.cpfcnpj
+                                            ? maskCpfCnpjTable(cliente.cpfcnpj)
+                                            : '-'}
+                                    </td>
                                     <th>
                                         <button
                                             type="button"

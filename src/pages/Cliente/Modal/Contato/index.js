@@ -37,7 +37,7 @@ export default function Contato({ parent, isVsible, listaContato, contato }) {
         const [contatos, setContatos] = listaContato;
         const listContato = [];
 
-        contatos.array.forEach(element => {
+        contatos.map(element => {
             if (contato.telefone !== element.telefone) {
                 listContato.push(element);
             }
@@ -70,6 +70,7 @@ export default function Contato({ parent, isVsible, listaContato, contato }) {
                 email: '',
                 principal: false,
             });
+            handleCloseModal();
         }
     };
 
@@ -106,13 +107,13 @@ export default function Contato({ parent, isVsible, listaContato, contato }) {
                                 onChange={handleChangeTelefone}
                                 disabled={visible}
                                 ref={register({
+                                    minLength: {
+                                        value: 15,
+                                        message: 'Telefone inválido.',
+                                    },
                                     required: {
                                         value: true,
                                         message: 'O telefone é obrigatório.',
-                                    },
-                                    pattern: {
-                                        value: /^(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})-?(\d{4}))$/,
-                                        message: 'Telefone inválido.',
                                     },
                                 })}
                             />

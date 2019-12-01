@@ -12,7 +12,6 @@ import {
 import useForm from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
 import {
     maskCpfCnpj,
     maskTelefone,
@@ -26,7 +25,6 @@ import {
     ContainerButton,
     ContainerDadosPessoais,
 } from './styles';
-import { apiReceitaFederal } from '~/services/api';
 
 import ModalContato from '~/pages/Cliente/Modal/Contato';
 import { insertRequest, updateRequest } from '~/store/modules/cliente/actions';
@@ -43,6 +41,7 @@ export default function Modal({ parent, cliente, isVsible }) {
     const [visible, setVisible] = useState(false);
 
     const loading = useSelector(state => state.cliente.loading);
+    const err = useSelector(state => state.cliente.err);
 
     const [contatos, setContatos] = useState([]);
     const [visivel, setVisivel] = useState(true);
@@ -147,6 +146,7 @@ export default function Modal({ parent, cliente, isVsible }) {
         } else {
             dispatch(insertRequest(dadosCliente));
         }
+
         handleCloseModal();
     };
 
@@ -201,7 +201,7 @@ export default function Modal({ parent, cliente, isVsible }) {
                                         message: 'CPF/CNPJ inválido.',
                                     },
                                     validate: value =>
-                                        validarCpfCnpj(value) ||
+                                        !validarCpfCnpj(value) &&
                                         'CPF/CNPJ inválido.',
                                 })}
                             />
