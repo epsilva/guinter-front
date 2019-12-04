@@ -1,4 +1,5 @@
 import styled, { keyframes } from 'styled-components';
+import ReactSelect from 'react-select';
 
 const fadeIn = keyframes`
   from {
@@ -100,6 +101,17 @@ export const ContainerEnd = styled.div`
             height: 30px;
             padding: 0 15px;
             margin: 0 30px 10px;
+        }
+
+        select {
+            border: 0;
+            height: 30px;
+            padding: 0 15px;
+            margin: 0 30px 10px;
+            background: #eee;
+            width: 90%;
+            text-align: left;
+            background: rgba(5, 5, 5, 0.1);
         }
     }
 `;

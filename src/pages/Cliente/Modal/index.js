@@ -46,6 +46,36 @@ export default function Modal({ parent, cliente, isVsible }) {
     const [contatos, setContatos] = useState([]);
     const [visivel, setVisivel] = useState(true);
 
+    const options = [
+        { value: '1', label: 'AC' },
+        { value: '2', label: 'AL' },
+        { value: '3', label: 'AP' },
+        { value: '4', label: 'AM' },
+        { value: '5', label: 'BA' },
+        { value: '6', label: 'CE' },
+        { value: '7', label: 'DF' },
+        { value: '8', label: 'ES' },
+        { value: '9', label: 'GO' },
+        { value: '10', label: 'MA' },
+        { value: '11', label: 'MT' },
+        { value: '12', label: 'MS' },
+        { value: '13', label: 'MG' },
+        { value: '14', label: 'PA' },
+        { value: '15', label: 'PB' },
+        { value: '16', label: 'PR' },
+        { value: '17', label: 'PE' },
+        { value: '18', label: 'PI' },
+        { value: '19', label: 'RJ' },
+        { value: '20', label: 'RN' },
+        { value: '21', label: 'RS' },
+        { value: '22', label: 'RO' },
+        { value: '23', label: 'RR' },
+        { value: '24', label: 'SC' },
+        { value: '25', label: 'SP' },
+        { value: '26', label: 'SE' },
+        { value: '27', label: 'TO' },
+    ];
+
     useEffect(() => {
         setVisivel(isVsible);
     }, [isVsible]);
@@ -210,13 +240,18 @@ export default function Modal({ parent, cliente, isVsible }) {
                     <h4>Endereço</h4>
                     <ContainerEnd>
                         <div>
-                            <input
-                                type="text"
+                            <select
                                 name="estado"
-                                placeholder="Estado"
-                                disabled={isVsible}
                                 ref={register({ required: true })}
-                            />
+                                disabled={isVsible}
+                            >
+                                <option value="" disabled selected>
+                                    Selecione o estado
+                                </option>
+                                {options.map(uf => (
+                                    <option value={uf.value}>{uf.label}</option>
+                                ))}
+                            </select>
                             {errors.estado && (
                                 <span>O estado é obrigatório.</span>
                             )}
@@ -307,8 +342,8 @@ export default function Modal({ parent, cliente, isVsible }) {
                                                     {contato.nome}
                                                 </td>
                                             ) : (
-                                                    <td>{contato.nome}</td>
-                                                )}
+                                                <td>{contato.nome}</td>
+                                            )}
 
                                             <td>
                                                 {maskTelefone(contato.telefone)}
@@ -352,29 +387,29 @@ export default function Modal({ parent, cliente, isVsible }) {
                                         </tr>
                                     ))
                                 ) : (
-                                        <tr />
-                                    )}
+                                    <tr />
+                                )}
                             </tbody>
                         </table>
                     </ContainerTable>
                     {loading ? (
                         <Loading />
                     ) : (
-                            <ContainerButton>
-                                {visivel || (
-                                    <button type="submit" title="Salvar">
-                                        <MdSave size={42} color="#3b9eff" />
-                                    </button>
-                                )}
-                                <button
-                                    type="button"
-                                    onClick={handleCloseModal}
-                                    title="Fechar"
-                                >
-                                    <MdCancel size={42} color="#fb6f91" />
+                        <ContainerButton>
+                            {visivel || (
+                                <button type="submit" title="Salvar">
+                                    <MdSave size={42} color="#3b9eff" />
                                 </button>
-                            </ContainerButton>
-                        )}
+                            )}
+                            <button
+                                type="button"
+                                onClick={handleCloseModal}
+                                title="Fechar"
+                            >
+                                <MdCancel size={42} color="#fb6f91" />
+                            </button>
+                        </ContainerButton>
+                    )}
                 </form>
             </Container>
         </ModalPopup>
