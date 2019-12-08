@@ -187,12 +187,12 @@ export default function Modal({ parent, cliente, isVsible }) {
         if (contatos.length > 0) {
             const contemContatoPrincipal = contatos.filter(contato => {
                 if (contato.principal) {
-                    return contato.principal
+                    return contato.principal;
                 }
             });
 
             if (!contemContatoPrincipal) {
-                toast.error('Contato pricipal 1 obrigatório!');
+                toast.error('Contato pricipal obrigatório!');
             } else {
                 if (cliente.id) {
                     dispatch(updateRequest(dadosCliente));
@@ -202,7 +202,7 @@ export default function Modal({ parent, cliente, isVsible }) {
                 handleCloseModal();
             }
         } else {
-            toast.error('Contato pricipal 2 obrigatório!');
+            toast.error('Adicione ao menos um contato!');
         }
     };
 
