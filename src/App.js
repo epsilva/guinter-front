@@ -3,6 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
+import 'react-datepicker/dist/react-datepicker.css';
 
 import GlobalStyle from './styles/global';
 

@@ -342,8 +342,8 @@ export default function Modal({ parent, cliente, isVsible }) {
                                                     {contato.nome}
                                                 </td>
                                             ) : (
-                                                <td>{contato.nome}</td>
-                                            )}
+                                                    <td>{contato.nome}</td>
+                                                )}
 
                                             <td>
                                                 {maskTelefone(contato.telefone)}
@@ -387,29 +387,29 @@ export default function Modal({ parent, cliente, isVsible }) {
                                         </tr>
                                     ))
                                 ) : (
-                                    <tr />
-                                )}
+                                        <tr />
+                                    )}
                             </tbody>
                         </table>
                     </ContainerTable>
                     {loading ? (
                         <Loading />
                     ) : (
-                        <ContainerButton>
-                            {visivel || (
-                                <button type="submit" title="Salvar">
-                                    <MdSave size={42} color="#3b9eff" />
+                            <ContainerButton>
+                                {visivel || (
+                                    <button type="submit" title="Salvar">
+                                        <MdSave size={42} color="#3b9eff" />
+                                    </button>
+                                )}
+                                <button
+                                    type="button"
+                                    onClick={handleCloseModal}
+                                    title="Fechar"
+                                >
+                                    <MdCancel size={42} color="#fb6f91" />
                                 </button>
-                            )}
-                            <button
-                                type="button"
-                                onClick={handleCloseModal}
-                                title="Fechar"
-                            >
-                                <MdCancel size={42} color="#fb6f91" />
-                            </button>
-                        </ContainerButton>
-                    )}
+                            </ContainerButton>
+                        )}
                 </form>
             </Container>
         </ModalPopup>

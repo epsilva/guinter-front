@@ -1,5 +1,4 @@
 import styled, { keyframes } from 'styled-components';
-import ReactSelect from 'react-select';
 
 const fadeIn = keyframes`
   from {
@@ -81,7 +80,29 @@ export const Container = styled.div`
     }
 `;
 
-export const ContainerEnd = styled.div`
+export const ContainerDados = styled.div`
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    flex-direction: row;
+    padding-right: 10px;
+    padding-left: 10px;
+
+    > div {
+        display: flex;
+        width: 50%;
+        flex-wrap: wrap;
+        flex-direction: row;
+
+        strong {
+            width: 135px;
+            text-align: left;
+            padding-right: 10px;
+        }
+    }
+`;
+
+export const ContainerDetalhesTecnicos = styled.div`
     display: flex;
     width: 100%;
     flex-wrap: wrap;
@@ -90,30 +111,16 @@ export const ContainerEnd = styled.div`
 
     > div {
         display: flex;
-        width: 50%;
-        flex-wrap: wrap;
-        flex-direction: column;
-        padding-left: 10px;
-        input {
-            background: #eee;
-            width: 100%;
-            text-align: left;
-            background: rgba(5, 5, 5, 0.1);
-            border: 0;
-            height: 30px;
-            padding: 0 15px;
-            margin-bottom: 10px;
-        }
+        width: 100%;
+        flex-wrap: nowrap;
+        flex-direction: row;
 
-        select {
-            border: 0;
-            height: 30px;
-            padding: 0 15px;
-            margin-bottom: 10px;
-            background: #eee;
+        > div {
+            display: flex;
             width: 100%;
-            text-align: left;
-            background: rgba(5, 5, 5, 0.1);
+            flex-wrap: wrap;
+            flex-direction: column;
+            padding-left: 10px;
         }
     }
 `;
@@ -147,6 +154,8 @@ export const ContainerTable = styled.div`
     height: 200px;
     width: 98%;
     background: #fff;
+    margin-left: 10px;
+    margin-right: 10px;
     table {
         padding: 0 0 0 0;
         width: 100%;
@@ -295,7 +304,22 @@ export const ContainerDadosPessoais = styled.div`
     align-items: center;
     width: 100%;
     padding-right: 10px;
+    > div {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+        padding-left: 10px;
+    }
+`;
 
+export const ContainerDadosOrcamento = styled.div`
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    padding-right: 10px;
     > div {
         display: flex;
         justify-content: center;
@@ -303,15 +327,15 @@ export const ContainerDadosPessoais = styled.div`
         width: 100%;
         padding-left: 10px;
 
-        input {
-            background: #eee;
-            width: 100%;
-            text-align: left;
-            background: rgba(5, 5, 5, 0.1);
-            border: 0;
-            height: 30px;
-            padding: 0 15px;
-            margin-bottom: 10px;
+        p {
+            color: #eee;
+            font-weight: bold;
+            background: red;
+            width: 35%;
+            text-align: center;
+            vertical-align: center;
+            align-items: center;
+            border-radius: 4px;
         }
     }
 `;

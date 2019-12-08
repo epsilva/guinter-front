@@ -14,12 +14,12 @@ export default function Menu() {
             title: 'Clientes',
             path: '/cliente',
         },
-        {
-            id: 2,
-            icon: <FaStore size={30} color="#3b9eff" />,
-            title: 'Serviços',
-            path: '/servico',
-        },
+        // {
+        //     id: 2,
+        //     icon: <FaStore size={30} color="#3b9eff" />,
+        //     title: 'Serviços',
+        //     path: '/servico',
+        // },
         {
             id: 3,
             icon: <MdBusiness size={30} color="#3b9eff" />,

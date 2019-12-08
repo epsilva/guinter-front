@@ -9,6 +9,6 @@ export const Wrapper = styled.div`
     input {
         border: 0;
         border-radius: 4px;
-        height: 44px;
+        /* height: 44px; */
     }
 `;
