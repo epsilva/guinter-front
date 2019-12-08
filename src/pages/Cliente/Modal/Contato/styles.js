@@ -124,14 +124,7 @@ export const ContainerContatos = styled.div`
         width: 50%;
 
         input {
-            background: #eee;
             width: 90%;
-            text-align: left;
-            background: rgba(5, 5, 5, 0.1);
-            border: 0;
-            height: 30px;
-            padding: 0 15px;
-            margin: 0 20px 10px;
         }
     }
 `;

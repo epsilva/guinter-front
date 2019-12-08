@@ -10,8 +10,12 @@ import {
     MdStar,
 } from 'react-icons/md';
 import useForm from 'react-hook-form';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import Radio from '@material-ui/core/Radio';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 import {
     maskCpfCnpj,
     maskTelefone,
@@ -39,9 +43,9 @@ export default function Modal({ parent, cliente, isVsible }) {
     const [openModalContato, setOpenModalContato] = useState(false);
     const [selectedContato, setSelectedContato] = useState({});
     const [visible, setVisible] = useState(false);
+    const [estado, setEstado] = useState({});
 
     const loading = useSelector(state => state.cliente.loading);
-    const err = useSelector(state => state.cliente.err);
 
     const [contatos, setContatos] = useState([]);
     const [visivel, setVisivel] = useState(true);
@@ -83,7 +87,13 @@ export default function Modal({ parent, cliente, isVsible }) {
     useEffect(() => {
         const [openModal] = parent;
         setIsOpenModal(openModal);
+        setEstado({});
         if (cliente && cliente.enderecos) {
+            options.filter(uf => {
+                if (uf.label === cliente.enderecos.estado) {
+                    setEstado(uf);
+                }
+            });
             setValue('nome', cliente.nome);
             setValue('cpfcnpj', maskCpfCnpjTable(cliente.cpfcnpj));
             setValue('estado', cliente.enderecos.estado);
@@ -94,6 +104,7 @@ export default function Modal({ parent, cliente, isVsible }) {
             setValue('bairro', cliente.enderecos.bairro);
             setContatos(cliente.contatos);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cliente, parent, setValue]);
 
     function resetForm() {
@@ -107,6 +118,8 @@ export default function Modal({ parent, cliente, isVsible }) {
             numero: '',
             complemento: '',
         });
+        setContatos([]);
+        setEstado({});
     }
 
     function handleCloseModal() {
@@ -171,18 +184,27 @@ export default function Modal({ parent, cliente, isVsible }) {
             },
             contatos,
         };
-        if (cliente.id) {
-            dispatch(updateRequest(dadosCliente));
+        if (contatos.length > 0) {
+            const contemContatoPrincipal = contatos.filter(contato => {
+                if (contato.principal) {
+                    return contato.principal
+                }
+            });
+
+            if (!contemContatoPrincipal) {
+                toast.error('Contato pricipal 1 obrigatório!');
+            } else {
+                if (cliente.id) {
+                    dispatch(updateRequest(dadosCliente));
+                } else {
+                    dispatch(insertRequest(dadosCliente));
+                }
+                handleCloseModal();
+            }
         } else {
-            dispatch(insertRequest(dadosCliente));
+            toast.error('Contato pricipal 2 obrigatório!');
         }
-
-        handleCloseModal();
     };
-
-    function validarCpfCnpj(value) {
-        return validacaoCpfCnpj(value);
-    }
 
     return (
         <ModalPopup isOpen={isOpenModal}>
@@ -205,110 +227,132 @@ export default function Modal({ parent, cliente, isVsible }) {
                     </button>
                 </header>
 
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
                     <h4>Dados Pessoais</h4>
                     <ContainerDadosPessoais>
                         <div>
-                            <input
-                                type="text"
-                                name="nome"
-                                placeholder="Nome do cliente"
+                            <TextField
+                                error={errors.nome}
+                                id="standard-basic"
+                                label="Nome do cliente"
                                 disabled={isVsible}
-                                ref={register({ required: true })}
+                                inputRef={register({ required: true })}
+                                name="nome"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
-                            {errors.nome && <span>O nome é obrigatório.</span>}
                         </div>
                         <div>
-                            <input
-                                type="text"
-                                name="cpfcnpj"
-                                placeholder="CPJ/CNPJ"
+                            <TextField
+                                error={errors.cpfcnpj}
+                                id="standard-basic"
+                                label="CPF/CNPJ"
                                 disabled={isVsible}
-                                onChange={handlechangeCpfCnpj}
-                                ref={register({
+                                inputRef={register({
                                     pattern: {
                                         value: /(^\d{3}\.\d{3}\.\d{3}-\d{2}$)|(^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$)/,
                                         message: 'CPF/CNPJ inválido.',
                                     },
                                 })}
+                                onChange={handlechangeCpfCnpj}
+                                name="cpfcnpj"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
-                            {errors.cpfcnpj && (
-                                <span>{errors.cpfcnpj.message}</span>
-                            )}
                         </div>
                     </ContainerDadosPessoais>
                     <h4>Endereço</h4>
                     <ContainerEnd>
                         <div>
-                            <select
-                                name="estado"
-                                ref={register({ required: true })}
+                            <Autocomplete
+                                id="controlled-demo"
                                 disabled={isVsible}
-                            >
-                                <option value="" disabled selected>
-                                    Selecione o estado
-                                </option>
-                                {options.map(uf => (
-                                    <option value={uf.value}>{uf.label}</option>
-                                ))}
-                            </select>
-                            {errors.estado && (
-                                <span>O estado é obrigatório.</span>
-                            )}
+                                options={options}
+                                getOptionLabel={option => option.label}
+                                value={estado}
+                                onChange={(event, value) => {
+                                    setEstado(value);
+                                }}
+                                renderInput={params => (
+                                    <TextField
+                                        {...params}
+                                        label="Estado"
+                                        error={errors.estado}
+                                        value={estado}
+                                        fullWidth
+                                        name="estado"
+                                        inputRef={register({ required: true })}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                    />
+                                )}
+                            />
                         </div>
                         <div>
-                            <input
-                                type="text"
+                            <TextField
+                                error={errors.cidade}
+                                id="standard-basic"
+                                label="Cidade"
+                                disabled={isVsible}
+                                inputRef={register({ required: true })}
                                 name="cidade"
-                                placeholder="Cidade"
-                                disabled={isVsible}
-                                ref={register({ required: true })}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
-                            {errors.cidade && (
-                                <span>A cidade é obrigatória.</span>
-                            )}
                         </div>
                         <div>
-                            <input
-                                type="text"
+                            <TextField
+                                error={errors.bairro}
+                                id="standard-basic"
+                                label="Bairro"
+                                disabled={isVsible}
+                                inputRef={register({ required: true })}
                                 name="bairro"
-                                placeholder="Bairro"
-                                disabled={isVsible}
-                                ref={register({ required: true })}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
-                            {errors.bairro && (
-                                <span>O bairro é obrigatório.</span>
-                            )}
                         </div>
                         <div>
-                            <input
-                                type="text"
+                            <TextField
+                                error={errors.rua}
+                                id="standard-basic"
+                                label="Rua"
+                                disabled={isVsible}
+                                inputRef={register({ required: true })}
                                 name="rua"
-                                placeholder="Rua"
-                                disabled={isVsible}
-                                ref={register({ required: true })}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
-                            {errors.rua && <span>A Rua é obrigatória.</span>}
                         </div>
                         <div>
-                            <input
-                                type="text"
+                            <TextField
+                                error={errors.numero}
+                                id="standard-basic"
+                                label="Número"
+                                disabled={isVsible}
+                                inputRef={register({ required: true })}
                                 name="numero"
-                                placeholder="Número"
-                                disabled={isVsible}
-                                ref={register({ required: true })}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
-                            {errors.numero && (
-                                <span>O número é obrigatório.</span>
-                            )}
                         </div>
                         <div>
-                            <input
-                                type="text"
-                                name="complemento"
-                                placeholder="Complemento"
+                            <TextField
+                                id="standard-basic"
+                                label="Complemento"
                                 disabled={isVsible}
-                                ref={register}
+                                inputRef={register}
+                                name="complemento"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
                         </div>
                     </ContainerEnd>
@@ -317,6 +361,7 @@ export default function Modal({ parent, cliente, isVsible }) {
                         <table>
                             <thead>
                                 <tr>
+                                    <th> </th>
                                     <th>Nome</th>
                                     <th>Contato</th>
                                     <th>E-mail</th>
@@ -336,14 +381,15 @@ export default function Modal({ parent, cliente, isVsible }) {
                                 {contatos ? (
                                     contatos.map(contato => (
                                         <tr key={contato.telefone}>
-                                            {contato.principal ? (
-                                                <td>
-                                                    <MdStar color="orange" />{' '}
-                                                    {contato.nome}
-                                                </td>
-                                            ) : (
-                                                    <td>{contato.nome}</td>
-                                                )}
+                                            <td>
+                                                <MdStar
+                                                    color={contato.principal
+                                                        ? 'orange'
+                                                        : '#333'
+                                                    }
+                                                />
+                                            </td>
+                                            <td>{contato.nome}</td>
 
                                             <td>
                                                 {maskTelefone(contato.telefone)}

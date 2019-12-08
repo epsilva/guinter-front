@@ -94,16 +94,6 @@ export const ContainerEnd = styled.div`
         flex-wrap: wrap;
         flex-direction: column;
         padding-left: 10px;
-        input {
-            background: #eee;
-            width: 100%;
-            text-align: left;
-            background: rgba(5, 5, 5, 0.1);
-            border: 0;
-            height: 30px;
-            padding: 0 15px;
-            margin-bottom: 10px;
-        }
 
         select {
             border: 0;
@@ -302,16 +292,5 @@ export const ContainerDadosPessoais = styled.div`
         flex-direction: column;
         width: 100%;
         padding-left: 10px;
-
-        input {
-            background: #eee;
-            width: 100%;
-            text-align: left;
-            background: rgba(5, 5, 5, 0.1);
-            border: 0;
-            height: 30px;
-            padding: 0 15px;
-            margin-bottom: 10px;
-        }
     }
 `;

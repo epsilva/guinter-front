@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import TextField from '@material-ui/core/TextField';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { MdClose, MdSave, MdCancel } from 'react-icons/md';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -90,23 +93,28 @@ export default function Contato({ parent, isVsible, listaContato, contato }) {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <ContainerContatos>
                         <div className="field">
-                            <input
-                                type="text"
+                            <TextField
+                                error={errors.nome}
+                                id="standard-basic"
+                                label="Nome do cliente"
+                                disabled={isVsible}
+                                inputRef={register({ required: true })}
                                 name="nome"
-                                placeholder="Nome do contato"
-                                disabled={visible}
-                                ref={register({ required: true })}
+                                style={{ width: '90%' }}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
-                            {errors.nome && <span>O nome é obrigatório.</span>}
                         </div>
                         <div className="field">
-                            <input
-                                type="text"
-                                name="telefone"
-                                placeholder="Telefone"
+                            <TextField
+                                error={errors.telefone}
+                                id="standard-basic"
+                                label="Telefone"
                                 onChange={handleChangeTelefone}
                                 disabled={visible}
-                                ref={register({
+                                style={{ width: '90%' }}
+                                inputRef={register({
                                     minLength: {
                                         value: 15,
                                         message: 'Telefone inválido.',
@@ -116,27 +124,30 @@ export default function Contato({ parent, isVsible, listaContato, contato }) {
                                         message: 'O telefone é obrigatório.',
                                     },
                                 })}
+                                name="telefone"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
-                            {errors.telefone && (
-                                <span>{errors.telefone.message}</span>
-                            )}
                         </div>
                         <div className="field">
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="E-mail"
-                                disabled={visible}
-                                ref={register({
+                            <TextField
+                                error={errors.email}
+                                id="standard-basic"
+                                label="E-mail"
+                                style={{ width: '90%' }}
+                                disabled={isVsible}
+                                inputRef={register({
                                     pattern: {
                                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
                                         message: 'Endereço de e-mail inválido',
                                     },
                                 })}
+                                name="email"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
-                            {errors.email && (
-                                <span>{errors.email.message}</span>
-                            )}
                         </div>
                         <div className="check">
                             <label htmlFor="checkbox">
