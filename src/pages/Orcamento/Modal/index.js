@@ -79,8 +79,6 @@ export default function Modal({ parent, isVsible }) {
         resetForm();
     }
 
-    function handleDelete(item) {}
-
     const onSubmit = data => {};
 
     function handleDataAgendamento(date) {
@@ -92,7 +90,6 @@ export default function Modal({ parent, isVsible }) {
     useEffect(() => {
         if (Object.keys(cliente).length !== 0) {
             setValue('cpfcnpj', maskCpfCnpjTable(cliente.cpfcnpj));
-            console.tron.log(cliente);
         } else {
             setValue('cpfcnpj', '');
         }
