@@ -23,10 +23,12 @@ const fadeOut = keyframes`
 export const Container = styled.div`
     background: #fff;
     width: 65%;
-    height: auto;
+    height: inherit;
+    max-height: 80%;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.7);
     display: flex;
     flex-direction: column;
+    overflow: auto;
 
     visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
     animation: ${props => (props.isOpen ? fadeIn : fadeOut)} 0.6s forwards;

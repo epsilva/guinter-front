@@ -79,9 +79,9 @@ export default function Modal({ parent, isVsible }) {
         resetForm();
     }
 
-    function handleDelete(item) { }
+    function handleDelete(item) {}
 
-    const onSubmit = data => { };
+    const onSubmit = data => {};
 
     function handleDataAgendamento(date) {
         setDataAgendamento({
@@ -92,7 +92,7 @@ export default function Modal({ parent, isVsible }) {
     useEffect(() => {
         if (Object.keys(cliente).length !== 0) {
             setValue('cpfcnpj', maskCpfCnpjTable(cliente.cpfcnpj));
-            console.tron.log(cliente)
+            console.tron.log(cliente);
         } else {
             setValue('cpfcnpj', '');
         }
@@ -182,47 +182,84 @@ export default function Modal({ parent, isVsible }) {
                     <ContainerDados>
                         <div>
                             <strong>Estado:</strong>
-                            <p>{cliente.enderecos ? cliente.enderecos.estado : '-'}</p>
+                            <p>
+                                {cliente.enderecos
+                                    ? cliente.enderecos.estado
+                                    : '-'}
+                            </p>
                         </div>
                         <div>
                             <strong>Cidade:</strong>
-                            <p>{cliente.enderecos ? cliente.enderecos.cidade : '-'}</p>
+                            <p>
+                                {cliente.enderecos
+                                    ? cliente.enderecos.cidade
+                                    : '-'}
+                            </p>
                         </div>
                         <div>
                             <strong>Bairro:</strong>
-                            <p>{cliente.enderecos ? cliente.enderecos.bairro : '-'}</p>
+                            <p>
+                                {cliente.enderecos
+                                    ? cliente.enderecos.bairro
+                                    : '-'}
+                            </p>
                         </div>
                         <div>
                             <strong>Rua:</strong>
-                            <p>{cliente.enderecos ? cliente.enderecos.rua : '-'}</p>
+                            <p>
+                                {cliente.enderecos
+                                    ? cliente.enderecos.rua
+                                    : '-'}
+                            </p>
                         </div>
                         <div>
                             <strong>Número:</strong>
-                            <p>{cliente.enderecos ? cliente.enderecos.numero : '-'}</p>
+                            <p>
+                                {cliente.enderecos
+                                    ? cliente.enderecos.numero
+                                    : '-'}
+                            </p>
                         </div>
                         <div>
                             <strong>Complemento:</strong>
-                            <p>{cliente.enderecos ? cliente.enderecos.complemento : '-'}</p>
+                            <p>
+                                {cliente.enderecos
+                                    ? cliente.enderecos.complemento
+                                    : '-'}
+                            </p>
                         </div>
                     </ContainerDados>
                     <h4>Contato</h4>
                     <ContainerDados>
-                        {cliente.contatos && cliente.contatos.map(contato => (
-                            <>
-                                <div>
-                                    <strong>Nome:</strong>
-                                    <p>{contato.principal ? contato.nome : '-'}</p>
-                                </div>
-                                <div>
-                                    <strong>Telefone:</strong>
-                                    <p>{contato.principal ? maskTelefone(contato.telefone) : '-'}</p>
-                                </div>
-                                <div>
-                                    <strong>E-mail:</strong>
-                                    <p>{contato.principal ? contato.email : '-'}</p>
-                                </div>
-                            </>
-                        ))}
+                        {cliente.contatos &&
+                            cliente.contatos.map(contato => (
+                                <>
+                                    <div>
+                                        <strong>Nome:</strong>
+                                        <p>
+                                            {contato.principal
+                                                ? contato.nome
+                                                : '-'}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <strong>Telefone:</strong>
+                                        <p>
+                                            {contato.principal
+                                                ? maskTelefone(contato.telefone)
+                                                : '-'}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <strong>E-mail:</strong>
+                                        <p>
+                                            {contato.principal
+                                                ? contato.email
+                                                : '-'}
+                                        </p>
+                                    </div>
+                                </>
+                            ))}
                     </ContainerDados>
                     <h4>Dados Orçamento</h4>
                     <ContainerDadosOrcamento>
@@ -378,7 +415,7 @@ export default function Modal({ parent, isVsible }) {
                         </button>
                         <button
                             type="button"
-                            // onClick={handleCloseModal}
+                            onClick={handleCloseModal}
                             title="Fechar"
                         >
                             <MdCancel size={42} color="#fb6f91" />
