@@ -79,7 +79,9 @@ export default function Modal({ parent, isVsible }) {
         resetForm();
     }
 
-    const onSubmit = data => {};
+    const onSubmit = data => {
+        console.tron.log(data);
+    };
 
     function handleDataAgendamento(date) {
         setDataAgendamento({

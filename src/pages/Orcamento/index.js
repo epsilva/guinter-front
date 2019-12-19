@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import {
     MdBusinessCenter,
     MdSearch,
@@ -69,15 +70,11 @@ export default function Orcamento() {
                 <input
                     type="text"
                     placeholder="Pesquisar orçamento por cliente"
-                // onChange={handleSearch}
+                    // onChange={handleSearch}
                 />
-                <button
-                    type="button"
-                    onClick={handleOpenModal}
-                    title="Cadastrar"
-                >
+                <Link to="/orcamentoForm">
                     <MdBusinessCenter size={36} color="#3b9eff" />
-                </button>
+                </Link>
             </SearchBar>
             <ContainerTable>
                 <table>
@@ -100,8 +97,8 @@ export default function Orcamento() {
                                     <td>
                                         {orcamento.cliente.cpfcnpj
                                             ? maskCpfCnpjTable(
-                                                orcamento.cliente.cpfcnpj
-                                            )
+                                                  orcamento.cliente.cpfcnpj
+                                              )
                                             : '-'}
                                     </td>
                                     <td>
@@ -120,38 +117,38 @@ export default function Orcamento() {
                                         <button
                                             type="button"
                                             title="Exportar PDF"
-                                        // onClick={() =>
-                                        //     handleOpenEditModal(cliente)
-                                        // }
+                                            // onClick={() =>
+                                            //     handleOpenEditModal(cliente)
+                                            // }
                                         >
                                             <FaFilePdf size={20} />
                                         </button>
                                         <button
                                             type="button"
                                             title="Alterar"
-                                        // onClick={() =>
-                                        //     handleOpenEditModal(cliente)
-                                        // }
+                                            // onClick={() =>
+                                            //     handleOpenEditModal(cliente)
+                                            // }
                                         >
                                             <MdEdit size={20} />
                                         </button>
                                         <button
                                             type="button"
                                             title="Visualizar"
-                                        // onClick={() =>
-                                        //     handleOpenVisualizarModal(
-                                        //         cliente
-                                        //     )
-                                        // }
+                                            // onClick={() =>
+                                            //     handleOpenVisualizarModal(
+                                            //         cliente
+                                            //     )
+                                            // }
                                         >
                                             <MdVisibility size={20} />
                                         </button>
                                         <button
                                             type="button"
                                             title="Excluir"
-                                        // onClick={() =>
-                                        //     handleDelete(cliente)
-                                        // }
+                                            // onClick={() =>
+                                            //     handleDelete(cliente)
+                                            // }
                                         >
                                             <MdDelete size={20} />
                                         </button>

@@ -9,6 +9,7 @@ import Profile from '~/pages/Profile';
 import Cliente from '~/pages/Cliente';
 import Servico from '~/pages/Servico';
 import Orcamento from '~/pages/Orcamento';
+import FormOrcamento from '~/pages/Orcamento/Form';
 
 export default function Routes() {
     return (
@@ -20,6 +21,7 @@ export default function Routes() {
             <Route path="/cliente" component={Cliente} isPrivate />
             <Route path="/servico" component={Servico} isPrivate />
             <Route path="/orcamento" component={Orcamento} isPrivate />
+            <Route path="/orcamentoForm" component={FormOrcamento} isPrivate />
         </Switch>
     );
 }

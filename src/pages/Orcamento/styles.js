@@ -26,7 +26,7 @@ export const SearchBar = styled.div`
         position: absolute;
     }
 
-    button {
+    a {
         border: none;
         margin-right: 20px;
         margin-left: 20px;
